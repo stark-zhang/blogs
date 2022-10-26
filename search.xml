@@ -5992,10 +5992,230 @@ c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></spa
 </section>
 ]]></content>
       <categories>
-        <category>uncategorized</category>
+        <category>professional</category>
       </categories>
       <tags>
-        <tag>default</tag>
+        <tag>examination</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>软考复习笔记02：数据库</title>
+    <url>/post/1a7b39d2/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+<p>要求掌握以下知识点：</p>
+<ol>
+<li>信息系统综合知识：数据库管理系统的类型、结构和性能评价，常用的关系型数据库管理系统，数据库模式、数据库规范化，分布式数据库系统、并行数据库系统、数据仓库和数据挖掘技术、数据库工程、备份恢复；</li>
+<li>系统架构设计案例分析和论文：数据库建模、数据库设计、数据库系统的备份及恢复。</li>
+</ol>
+<h3 id="认识数据库系统">认识数据库系统</h3>
+<p>数据库系统(DataBase System, DBS)是实现有组织的、动态的存储大量关联数据、方便多用户访问的计算机软件、硬件和数据资源组成的系统。一个DBS由计算机硬件、软件（应用程序）、数据库和数据库管理员(DataBase Administrator, DBA)构成。常用的DBS分为集中式、分布式、C/S式和并行式四种。</p>
+<p>相比于文件系统阶段，数据库技术在数据管理上的特点如下：</p>
+<ul>
+<li>使用复杂的数据模型表述数据结构，数据冗余小、易扩充，实现数据共享；</li>
+<li>较高的数据和程序独立性；</li>
+<li>方便的用户接口；</li>
+<li>提共4个方面的数据控制功能：并发控制、恢复、完整性和安全性；</li>
+<li>增加了系统的灵活性。</li>
+</ul>
+<p>数据库管理系统(DataBase Management System, DBMS)是一种负责数据库的定义、建立、操作、管理和维护的软件系统。目的是保证数据安全可靠，提高数据库应用的简明性和方便性。其工作机理是把用户对数据的操作转为对系统存储文件的操作，有效实现数据库三级之间的转化。</p>
+<h3 id="数据库模式">数据库模式</h3>
+<p><img src="https://s2.loli.net/2022/10/20/g6qikFwzOIoXvh2.png" alt="image.png"></p>
+<h4 id="三级模式">三级模式</h4>
+<ol>
+<li>外模式，或称子模式，用户模式，用于描述用户看到或使用的那部分数据的逻辑结构。一个数据库可以有多个外模式，但是一个程序只能使用一个外模式；</li>
+<li>概念模式，或称模式，逻辑模式，用于描述数据库的逻辑结构，描述现实世界中的实体及其性质与联系，定义记录、数据项、数据完整性约束条件及记录之间的联系，是数据项值的框架；</li>
+<li>内模式，是整个数据库的最低层表示，不同于物理层，它假设外存是一个无限的线性地址空间，定义存储记录的类型、存储域的表示、存储记录的物理顺序，指引元、索引和存储路径等数据的存储组织；一个数据库只能拥有一个内模式。</li>
+</ol>
+<p>概念模式是数据库的中心与关键；内模式依赖于概念模式，独立于外模式和存储设备；外模式面向具体的应用，独立于内模式和存储设备；应用程序依赖于外模式，独立于概念模式和内模式。</p>
+<h4 id="三个级别">三个级别</h4>
+<ol>
+<li>用户级数据库：对应于外模式，最接近于用户，又称用户视图；</li>
+<li>概念级数据库：对应于概念模式，介于用户级与物理级之间，是所有用户视图的最小并集，是DBA看到和使用的数据库，又称DBA视图；</li>
+<li>物理级数据库：对应于内模式，描述数据的实际存储组织，最接近于物理存储，又称为内部视图。</li>
+</ol>
+<h4 id="两级独立性">两级独立性</h4>
+<p>DBS的三个抽象级通过两级映射（外模式/模式映射、模式/内模式映射）进行转换。同时又具有两级独立性：</p>
+<ul>
+<li>物理独立性：指用户应用程序和存储在磁盘上的数据库中的数据是相互独立的，数据的物理存储改变时，用户应用程序不需要改变；存在于模式/内模式映射转换中；</li>
+<li>逻辑独立性：用户的应用程序和数据库中的逻辑结构是相互独立的，数据的逻辑结构发生改变时，用户应用程序不需要改变。</li>
+</ul>
+<h3 id="数据模型">数据模型</h3>
+<p>数据模型主要有两大类，分别是概念数据模型（实体联系模型，E-R模型）和基本数据模型（结构数据模型）。基本数据模型是按照计算机系统的观点对数据和信息建模，主要用于DBMS的实现，由<strong>数据结构</strong>、<strong>数据操作</strong>和<strong>完整性约束</strong>三部分构成。</p>
+<p>常用的基本数据模型有：</p>
+<ul>
+<li>层次模型：使用树状结构表示实体类型及其联系，优点是实体间的联系可以使用指针实现，查询效率高，但是只能表示1:n联系；</li>
+<li>网状模型：使用有向图表示实体类型及其联系，可以使用指针实现联系，也很容易实现m:n联系，查询效率高，但是编写应用程序复杂；</li>
+<li>关系模型：使用表格结构表达实体集，用外键表示实体间联系，建立在严格的数学概念基础上，概念单一，结构简单清晰，但是查询效率低；</li>
+<li>面向对象模型：用面向对象的观点描述现实世界实体的逻辑组织、对象间限制、联系等的模型。</li>
+</ul>
+<h3 id="关系模型、规范化理论和反规范化理论">关系模型、规范化理论和反规范化理论</h3>
+<h4 id="基本概念">基本概念</h4>
+<p>域：一组具有<strong>相同</strong>数据类型的值的集合。</p>
+<p>给定一组域<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>D</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>D</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">D_1, D_2, \dots, D_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，记<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>×</mo><msub><mi>D</mi><mn>2</mn></msub><mo>×</mo><mo>⋯</mo><mo>×</mo><msub><mi>D</mi><mi>n</mi></msub><mo>=</mo><mo stretchy="false">{</mo><mo stretchy="false">(</mo><msub><mi>d</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>d</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>d</mi><mi>n</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><msub><mi>d</mi><mi>j</mi></msub><mo>∈</mo><msub><mi>D</mi><mi>j</mi></msub><mo separator="true">,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">D_1 \times D_2 \times \dots \times D_n = \{ (d_1, d_2, \dots, d_n) | d_j \in D_j, j = 1, 2, 3, \dots, n \}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">{(</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">}</span></span></span></span>为它们的笛卡尔积。其中<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>d</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>d</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>d</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(d_1, d_2, \dots, d_n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>称为n元组，简称元组。笛卡尔积可以看作一个二维表，表中的每一列是一个域，每一行对应一个元组。构成笛卡尔积的域可以是相同的。</p>
+<p>由于域可能是重复的，因此每列必须有一个名字，称为属性。</p>
+<p>笛卡尔积的子集叫做在域<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>D</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>D</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">D_1, D_2, \dots, D_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>上的关系，使用<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><msub><mi>D</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>D</mi><mn>2</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>D</mi><mi>n</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">R(D_1, D_2, \dots, D_n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>表示。<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span>表示关系的名字，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span>表示关系的“目”或“度”。</p>
+<p>若关系中的某一属性组（一个或者多个列）的值可以<strong>唯一标识</strong>一个元组，则该属性组称为候选键（候选码）；一个关系有多个候选键时，可以选择一个作为主键（主码），主键的所有属性称为主属性。不在任何候选键中的属性称为非码属性（非主属性）。<em>极端情况下，关系模式的所有属性的组合构成候选键，称为全码。</em></p>
+<p>关系具有三种基本类型：</p>
+<ol>
+<li>基本关系，或称基本表，基表，是实际存在的表，是实际存储数据的逻辑表示；</li>
+<li>查询表，是查询结果对应的表；</li>
+<li>视图表，是基本关系或者其他视图表导出的表，是虚表，不对应实际存储的数据。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>professional</category>
+      </categories>
+      <tags>
+        <tag>examination</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>软考复习笔记03：嵌入式系统</title>
+    <url>/post/495bb400/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+<p>嵌入式系统是一种以应用为中心，以计算机技术为基础，可以适应不同应用对功能、可靠性、成本、体积、功耗等方面的要求，集可配置可裁剪的软硬件于一体的计算机系统。它的主要特点是：</p>
+<ul>
+<li>专用性强：个性化很强，软硬件结合紧密；</li>
+<li>软硬件依赖性强：软硬件必须协同设计，以达到预期功能并满足性能、成本及可靠性要求；</li>
+<li>实时性强；</li>
+<li>处理器专用：处理器一般专为某种特定目的设计，功耗低、体积小、集成度高；</li>
+<li>多种技术紧密结合：常见计算机技术、半导体技术、电力电子技术、机械技术等结合；</li>
+<li>系统透明性；</li>
+<li>系统资源受限。</li>
+</ul>
+<p>兼具实时性和嵌入式特性的系统称为实时嵌入式系统(Real-Time Embeded System, RTES)。RTES一般具有如下几个概念：</p>
+<ul>
+<li>逻辑正确：对外部输入可以正确处理；</li>
+<li>时间正确：系统对外部输入的处理必须在预定的周期内完成；</li>
+<li>Deadline：对外部输入处理的最迟时间界限；</li>
+<li>实时系统：同时满足逻辑正确、时间正确的系统，二者的重要程度等同；但是在特殊情形下也可能牺牲时间正确性保证逻辑正确性。</li>
+</ul>
+<p>根据对Deadline容忍程度的不同，一般可以分为硬RTES和软RTES。一般任务的开始时间和Deadline同样重要，如果任务缺少必要的资源，就有可能阻碍人物的开始并错失Deadline，因此deadline问题就演变为资源调度问题。</p>
+<h3 id="基本结构">基本结构</h3>
+<h4 id="Hardware">Hardware</h4>
+<p>核心部件是各种类型的嵌入式处理器：</p>
+<ul>
+<li>嵌入式微处理器(MPU)：由计算机通用CPU演变而来，体积小、功耗低、质量轻、成本低以及可靠性高；</li>
+<li>嵌入式微控制器(MCU)：单片机，计算机系统集成到单个芯片中，具有更多的必要外设；</li>
+<li>嵌入式数字处理器(DSP)：专用于信号处理，采用数据指令分离的哈佛结构，具有专门的硬件乘法器且广泛采用流水线操作；</li>
+<li>嵌入式片上系统(SoC)：集成了很多功能模块的复杂系统。</li>
+</ul>
+<h4 id="Software">Software</h4>
+<p>软件架构主要分为系统层、支撑软件层和应用程序层。 操作系统层一般采用微内核架构，负责进程调度以及IPC、内存分配及异常和中断管理等基本任务；支撑软件层负责窗口系统、网络系统、DBMS及Java虚拟机构成，不过一般嵌入式软件开发环境也被认为是支撑软件层的一部分；应用软件层是系统功能的集中体现。</p>
+<p>嵌入式操作系统(Embeded OS, EOS)是运行在嵌入式硬件系统上的操作系统，具有如下特点：</p>
+<ul>
+<li>微型化：由于嵌入式系统中存储资源宝贵，因此EOS一般都设计的小型化以减少对系统资源的占用，并固化在存储器芯片中；</li>
+<li>代码质量高：以节省存储资源；</li>
+<li>专业化：广泛支持不同的硬件平台，因此具有很好的适应性和可移植性；</li>
+<li>实时性强：要求任务处理的实时性；</li>
+<li>可裁剪、可配置：可以根据应用的灵活性进行配置和合理的裁剪，以适应的微型化和专业化的需求。</li>
+</ul>
+<p>EOS又可以分为实时操作系统(Real-Time OS, RTOS)和非实时操作系统。</p>
+<p><img src="https://s2.loli.net/2022/10/25/Ejhg7MbwVPK8lUY.png" alt="image.png"></p>
+<p>大多数EOS内核都包含以下的三个公共部分：</p>
+<ol>
+<li>调度器：EOS的心脏，提供一组算法决定任务的执行顺序；</li>
+<li>内核对象：特殊的内核构件，帮助创建嵌入式应用；</li>
+<li>内核服务：是内核在对象上执行的操作后者通用操作。</li>
+</ol>
+<h5 id="多任务调度机制">多任务调度机制</h5>
+<p>任务是独立执行的线程；任务对象由任务名、ID、优先级、任务控制块、堆栈和执行例程构成；多任务是指系统在预定的死线内处理多个活动的能力；调度器是内核的心脏；可调度实体是指可以根据预定的调度算法竞争到系统执行时间的内核对象；上下文切换是指每次被调度运行时所要求的寄存器状态；可重入性是指一段代码被多个任务调用而不必担心数据被破坏；分发器时调度器的一部分，执行上下文切换并改变执行的流程。</p>
+<p><strong>任务执行时间不作为评价系统性能的指标。</strong></p>
+<p>常见的调度算法：</p>
+<ul>
+<li>基于优先级的抢占调度：
+<ul>
+<li>静态优先级</li>
+<li>动态优先级</li>
+<li>RMS调度：
+<ul>
+<li>任务是周期性的，不需要同步和资源共享，长度固定</li>
+<li>抢占式调度</li>
+<li>为满足实时性需求，RMS调度时CPU利用率应当小于70%</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><em>其它调度算法下CPU利用率应该维持在60%-70%之间。</em></p>
+<ul>
+<li>时间轮转调度：为每个任务提供确定的CPU执行时间；</li>
+<li>基于优先级抢占的扩充时间轮转调度：优先级相同的任务获得相同的时间长度，若任务无事可做，或者在当前时间片内任务结束，则转交CPU控制权给下一个就绪的任务。</li>
+</ul>
+<h5 id="内核对象">内核对象</h5>
+<ol>
+<li>信号量</li>
+<li>消息队列： 实现任务之间的信息交换，类似缓冲区的对象，用于暂存消息；</li>
+<li>管道：提供非结构化数据交换和实现任务同步的内核对象，一端用于读，而另一端用于写；</li>
+<li>事件</li>
+<li>信号：软中断，用于通知其他任务或ISR运行期间发生的事情；</li>
+<li>条件变量</li>
+</ol>
+<h5 id="内核服务">内核服务</h5>
+<ol>
+<li>
+<p>异常与中断<br>
+异常是指任何个打断处理器正常执行，迫使处理器进入特权模式的事件。分为同步异常和异步异常两种。中断是由外部硬件产生的事件引发的异步异常。</p>
+</li>
+<li>
+<p>计时器<br>
+用于驱动时间敏感的活动。</p>
+</li>
+<li>
+<p>IO管理</p>
+</li>
+</ol>
+<h4 id="常见的EOS">常见的EOS</h4>
+<p>VxWorks, Palm, Windows CE, Linux</p>
+<h3 id="嵌入式数据库">嵌入式数据库</h3>
+<p>嵌入式DBMS使用环境的特点如下：</p>
+<ul>
+<li>设备随时移动性</li>
+<li>网络频繁断接</li>
+<li>网络条件多样化</li>
+<li>通信能力不对称</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/10/27/zlxngiWTNDQEHbj.png" alt="image.png"></p>
+<p>实际应用中必须解决数据的一致性、高效的事务处理和数据的安全性等问题。</p>
+<ul>
+<li>数据的一致性：嵌入式DBMS和同步服务器的链接是一种弱链接，低带宽、长延迟，不稳定和经常性断接。常用乐观复制方法</li>
+<li>高效的事务处理</li>
+<li>安全性：严格存取权限</li>
+</ul>
+<p>特性：</p>
+<ul>
+<li>微核结构</li>
+<li>对标准SQL的支持</li>
+<li>事务管理功能</li>
+<li>完善的数据同步机制</li>
+<li>支持多种连接协议</li>
+<li>完备的嵌入式数据库管理功能</li>
+<li>支持多种EOS</li>
+</ul>
+<h3 id="嵌入式系统网络">嵌入式系统网络</h3>
+<p>现场总线网（Field Bus）和嵌入式TCP/IP协议栈</p>
+<h3 id="嵌入式开发环境">嵌入式开发环境</h3>
+<p>交叉平台开发方法</p>
+<h4 id="调试方法">调试方法</h4>
+<p>直接调试法、调试监控法、在线仿真法、片上调试法及模拟器法</p>
+]]></content>
+      <categories>
+        <category>professional</category>
+      </categories>
+      <tags>
+        <tag>examination</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>软考复习笔记04：计算机网络</title>
+    <url>/post/d425d1a3/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+]]></content>
+      <categories>
+        <category>professional</category>
+      </categories>
+      <tags>
+        <tag>examination</tag>
       </tags>
   </entry>
 </search>

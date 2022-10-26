@@ -1,0 +1,383 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>软考复习笔记03：嵌入式系统 | Stephen Zhang's Blog</title><meta name="keywords" content="examination"><meta name="author" content="stephen zhang"><meta name="copyright" content="stephen zhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软考复习笔记03：嵌入式系统">
+<meta property="og:url" content="https://blogs.stephen-zhang.cn/post/495bb400/">
+<meta property="og:site_name" content="Stephen Zhang&#39;s Blog">
+<meta property="og:description" content="-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blogs.stephen-zhang.cn/images/avatar.jpeg">
+<meta property="article:published_time" content="2022-10-24T13:34:00.000Z">
+<meta property="article:modified_time" content="2022-10-26T17:07:14.314Z">
+<meta property="article:author" content="stephen zhang">
+<meta property="article:tag" content="examination">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blogs.stephen-zhang.cn/images/avatar.jpeg"><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blogs.stephen-zhang.cn/post/495bb400/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="baidu-site-verification" content="code-rzFVk1pD5y"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7690d855badf77d19385d41b87879ca0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: stephen zhang","link":"链接: ","source":"来源: Stephen Zhang's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js',
+      css: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '软考复习笔记03：嵌入式系统',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-10-27 01:07:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Stephen Zhang's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/avatar.jpeg" onerror="onerror=null;src='/images/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-bookmark"></i><span> 合辑</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/commMobile"><i class="fa-fw fas fa-signal"></i><span> 移动通信</span></a></li><li><a class="site-page child" href="/commBasic"><i class="fa-fw fas fa-wave-square"></i><span> 通信基础</span></a></li><li><a class="site-page child" href="/reading"><i class="fa-fw fas fa-book-open-reader"></i><span> 读书笔记</span></a></li><li><a class="site-page child" href="/notes"><i class="fa-fw fas fa-note-sticky"></i><span> 杂谈</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://travellings.cn"><i class="fa-fw fas fa-subway"></i><span> 开往</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://trilium.stephen-zhang.cn"><i class="fa-fw fas fa-vault"></i><span> Trilium</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Stephen Zhang's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-bookmark"></i><span> 合辑</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/commMobile"><i class="fa-fw fas fa-signal"></i><span> 移动通信</span></a></li><li><a class="site-page child" href="/commBasic"><i class="fa-fw fas fa-wave-square"></i><span> 通信基础</span></a></li><li><a class="site-page child" href="/reading"><i class="fa-fw fas fa-book-open-reader"></i><span> 读书笔记</span></a></li><li><a class="site-page child" href="/notes"><i class="fa-fw fas fa-note-sticky"></i><span> 杂谈</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://travellings.cn"><i class="fa-fw fas fa-subway"></i><span> 开往</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://trilium.stephen-zhang.cn"><i class="fa-fw fas fa-vault"></i><span> Trilium</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">软考复习笔记03：嵌入式系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-10-24T13:34:00.000Z" title="发表于 2022-10-24 21:34:00">2022-10-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-10-26T17:07:14.314Z" title="更新于 2022-10-27 01:07:14">2022-10-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/professional/">professional</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="软考复习笔记03：嵌入式系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h3 id="Preface">Preface</h3>
+<p>嵌入式系统是一种以应用为中心，以计算机技术为基础，可以适应不同应用对功能、可靠性、成本、体积、功耗等方面的要求，集可配置可裁剪的软硬件于一体的计算机系统。它的主要特点是：</p>
+<ul>
+<li>专用性强：个性化很强，软硬件结合紧密；</li>
+<li>软硬件依赖性强：软硬件必须协同设计，以达到预期功能并满足性能、成本及可靠性要求；</li>
+<li>实时性强；</li>
+<li>处理器专用：处理器一般专为某种特定目的设计，功耗低、体积小、集成度高；</li>
+<li>多种技术紧密结合：常见计算机技术、半导体技术、电力电子技术、机械技术等结合；</li>
+<li>系统透明性；</li>
+<li>系统资源受限。</li>
+</ul>
+<p>兼具实时性和嵌入式特性的系统称为实时嵌入式系统(Real-Time Embeded System, RTES)。RTES一般具有如下几个概念：</p>
+<ul>
+<li>逻辑正确：对外部输入可以正确处理；</li>
+<li>时间正确：系统对外部输入的处理必须在预定的周期内完成；</li>
+<li>Deadline：对外部输入处理的最迟时间界限；</li>
+<li>实时系统：同时满足逻辑正确、时间正确的系统，二者的重要程度等同；但是在特殊情形下也可能牺牲时间正确性保证逻辑正确性。</li>
+</ul>
+<p>根据对Deadline容忍程度的不同，一般可以分为硬RTES和软RTES。一般任务的开始时间和Deadline同样重要，如果任务缺少必要的资源，就有可能阻碍人物的开始并错失Deadline，因此deadline问题就演变为资源调度问题。</p>
+<h3 id="基本结构">基本结构</h3>
+<h4 id="Hardware">Hardware</h4>
+<p>核心部件是各种类型的嵌入式处理器：</p>
+<ul>
+<li>嵌入式微处理器(MPU)：由计算机通用CPU演变而来，体积小、功耗低、质量轻、成本低以及可靠性高；</li>
+<li>嵌入式微控制器(MCU)：单片机，计算机系统集成到单个芯片中，具有更多的必要外设；</li>
+<li>嵌入式数字处理器(DSP)：专用于信号处理，采用数据指令分离的哈佛结构，具有专门的硬件乘法器且广泛采用流水线操作；</li>
+<li>嵌入式片上系统(SoC)：集成了很多功能模块的复杂系统。</li>
+</ul>
+<h4 id="Software">Software</h4>
+<p>软件架构主要分为系统层、支撑软件层和应用程序层。 操作系统层一般采用微内核架构，负责进程调度以及IPC、内存分配及异常和中断管理等基本任务；支撑软件层负责窗口系统、网络系统、DBMS及Java虚拟机构成，不过一般嵌入式软件开发环境也被认为是支撑软件层的一部分；应用软件层是系统功能的集中体现。</p>
+<p>嵌入式操作系统(Embeded OS, EOS)是运行在嵌入式硬件系统上的操作系统，具有如下特点：</p>
+<ul>
+<li>微型化：由于嵌入式系统中存储资源宝贵，因此EOS一般都设计的小型化以减少对系统资源的占用，并固化在存储器芯片中；</li>
+<li>代码质量高：以节省存储资源；</li>
+<li>专业化：广泛支持不同的硬件平台，因此具有很好的适应性和可移植性；</li>
+<li>实时性强：要求任务处理的实时性；</li>
+<li>可裁剪、可配置：可以根据应用的灵活性进行配置和合理的裁剪，以适应的微型化和专业化的需求。</li>
+</ul>
+<p>EOS又可以分为实时操作系统(Real-Time OS, RTOS)和非实时操作系统。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/10/25/Ejhg7MbwVPK8lUY.png" alt="image.png"></p>
+<p>大多数EOS内核都包含以下的三个公共部分：</p>
+<ol>
+<li>调度器：EOS的心脏，提供一组算法决定任务的执行顺序；</li>
+<li>内核对象：特殊的内核构件，帮助创建嵌入式应用；</li>
+<li>内核服务：是内核在对象上执行的操作后者通用操作。</li>
+</ol>
+<h5 id="多任务调度机制">多任务调度机制</h5>
+<p>任务是独立执行的线程；任务对象由任务名、ID、优先级、任务控制块、堆栈和执行例程构成；多任务是指系统在预定的死线内处理多个活动的能力；调度器是内核的心脏；可调度实体是指可以根据预定的调度算法竞争到系统执行时间的内核对象；上下文切换是指每次被调度运行时所要求的寄存器状态；可重入性是指一段代码被多个任务调用而不必担心数据被破坏；分发器时调度器的一部分，执行上下文切换并改变执行的流程。</p>
+<p><strong>任务执行时间不作为评价系统性能的指标。</strong></p>
+<p>常见的调度算法：</p>
+<ul>
+<li>基于优先级的抢占调度：
+<ul>
+<li>静态优先级</li>
+<li>动态优先级</li>
+<li>RMS调度：
+<ul>
+<li>任务是周期性的，不需要同步和资源共享，长度固定</li>
+<li>抢占式调度</li>
+<li>为满足实时性需求，RMS调度时CPU利用率应当小于70%</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><em>其它调度算法下CPU利用率应该维持在60%-70%之间。</em></p>
+<ul>
+<li>时间轮转调度：为每个任务提供确定的CPU执行时间；</li>
+<li>基于优先级抢占的扩充时间轮转调度：优先级相同的任务获得相同的时间长度，若任务无事可做，或者在当前时间片内任务结束，则转交CPU控制权给下一个就绪的任务。</li>
+</ul>
+<h5 id="内核对象">内核对象</h5>
+<ol>
+<li>信号量</li>
+<li>消息队列： 实现任务之间的信息交换，类似缓冲区的对象，用于暂存消息；</li>
+<li>管道：提供非结构化数据交换和实现任务同步的内核对象，一端用于读，而另一端用于写；</li>
+<li>事件</li>
+<li>信号：软中断，用于通知其他任务或ISR运行期间发生的事情；</li>
+<li>条件变量</li>
+</ol>
+<h5 id="内核服务">内核服务</h5>
+<ol>
+<li>
+<p>异常与中断<br>
+异常是指任何个打断处理器正常执行，迫使处理器进入特权模式的事件。分为同步异常和异步异常两种。中断是由外部硬件产生的事件引发的异步异常。</p>
+</li>
+<li>
+<p>计时器<br>
+用于驱动时间敏感的活动。</p>
+</li>
+<li>
+<p>IO管理</p>
+</li>
+</ol>
+<h4 id="常见的EOS">常见的EOS</h4>
+<p>VxWorks, Palm, Windows CE, Linux</p>
+<h3 id="嵌入式数据库">嵌入式数据库</h3>
+<p>嵌入式DBMS使用环境的特点如下：</p>
+<ul>
+<li>设备随时移动性</li>
+<li>网络频繁断接</li>
+<li>网络条件多样化</li>
+<li>通信能力不对称</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/10/27/zlxngiWTNDQEHbj.png" alt="image.png"></p>
+<p>实际应用中必须解决数据的一致性、高效的事务处理和数据的安全性等问题。</p>
+<ul>
+<li>数据的一致性：嵌入式DBMS和同步服务器的链接是一种弱链接，低带宽、长延迟，不稳定和经常性断接。常用乐观复制方法</li>
+<li>高效的事务处理</li>
+<li>安全性：严格存取权限</li>
+</ul>
+<p>特性：</p>
+<ul>
+<li>微核结构</li>
+<li>对标准SQL的支持</li>
+<li>事务管理功能</li>
+<li>完善的数据同步机制</li>
+<li>支持多种连接协议</li>
+<li>完备的嵌入式数据库管理功能</li>
+<li>支持多种EOS</li>
+</ul>
+<h3 id="嵌入式系统网络">嵌入式系统网络</h3>
+<p>现场总线网（Field Bus）和嵌入式TCP/IP协议栈</p>
+<h3 id="嵌入式开发环境">嵌入式开发环境</h3>
+<p>交叉平台开发方法</p>
+<h4 id="调试方法">调试方法</h4>
+<p>直接调试法、调试监控法、在线仿真法、片上调试法及模拟器法</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blogs.stephen-zhang.cn">stephen zhang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blogs.stephen-zhang.cn/post/495bb400/">https://blogs.stephen-zhang.cn/post/495bb400/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blogs.stephen-zhang.cn" target="_blank">Stephen Zhang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/examination/">examination</a></div><div class="post_share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_twitter"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://s2.loli.net/2022/04/17/dSevxc1pMP6CEnR.png" rel="external nofollow noreferrer" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/dSevxc1pMP6CEnR.png" alt="微信支付"/></a><div class="post-qr-code-desc">微信支付</div></li><li class="reward-item"><a href="https://s2.loli.net/2022/04/17/zilkjsBucpeWHZD.png" rel="external nofollow noreferrer" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/zilkjsBucpeWHZD.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/1a7b39d2/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/3A9XHFyxnDc7UCZ.jpg" onerror="onerror=null;src='/images/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">软考复习笔记02：数据库</div></div></a></div><div class="next-post pull-right"><a href="/post/d425d1a3/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/SChmVNtO8uR3L19.jpg" onerror="onerror=null;src='/images/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">软考复习笔记04：计算机网络</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/80678ee5/" title="软考复习笔记01：操作系统"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/nv3QePVq1G7bILd.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-19</div><div class="title">软考复习笔记01：操作系统</div></div></a></div><div><a href="/post/1a7b39d2/" title="软考复习笔记02：数据库"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/3A9XHFyxnDc7UCZ.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-20</div><div class="title">软考复习笔记02：数据库</div></div></a></div><div><a href="/post/d425d1a3/" title="软考复习笔记04：计算机网络"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/04/17/SChmVNtO8uR3L19.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-27</div><div class="title">软考复习笔记04：计算机网络</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/avatar.jpeg" onerror="this.onerror=null;this.src='/images/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">stephen zhang</div><div class="author-info__description">Try not to become a man of success but rather try to become a man of value.</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/stark-zhang"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/stark-zhang" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:yicheng123456@outlook.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://stackoverflow.com/users/15348537/stephen-zhang" rel="external nofollow noreferrer" target="_blank" title="StackOverflow"><i class="fab fa-stack-overflow"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎访问我的博客！你可以通过下面的合辑目录快速找到需要的文章：
+<div>
+  <ul>
+    <li>
+      <a href="/commMobile/" target="_self" style="color:#49b1f5">移动通信</a>：理解LTE-A/NR协议
+    </li>
+    <li>
+      <a href="/commBasic/" target="_self" style="color:#49b1f5">通信基础</a>：重温通信基础教材
+    </li>
+    <li>
+      <a href="/reading/" target="_self" style="color:#49b1f5">读书笔记</a>：读薄技术书籍
+    </li>
+    <li>
+      <a href="/notes/" target="_self" style="color:#49b1f5">杂谈</a>：工具应用类笔记
+    </li>
+  </ul>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Preface"><span class="toc-number">1.</span> <span class="toc-text">Preface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">基本结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Hardware"><span class="toc-number">2.1.</span> <span class="toc-text">Hardware</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Software"><span class="toc-number">2.2.</span> <span class="toc-text">Software</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%9A%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6"><span class="toc-number">2.2.1.</span> <span class="toc-text">多任务调度机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%AF%B9%E8%B1%A1"><span class="toc-number">2.2.2.</span> <span class="toc-text">内核对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.2.3.</span> <span class="toc-text">内核服务</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84EOS"><span class="toc-number">2.3.</span> <span class="toc-text">常见的EOS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">嵌入式数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%BD%91%E7%BB%9C"><span class="toc-number">4.</span> <span class="toc-text">嵌入式系统网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">5.</span> <span class="toc-text">嵌入式开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">调试方法</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/d425d1a3/" title="软考复习笔记04：计算机网络">软考复习笔记04：计算机网络</a><time datetime="2022-10-26T17:07:36.000Z" title="发表于 2022-10-27 01:07:36">2022-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/495bb400/" title="软考复习笔记03：嵌入式系统">软考复习笔记03：嵌入式系统</a><time datetime="2022-10-24T13:34:00.000Z" title="发表于 2022-10-24 21:34:00">2022-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/1a7b39d2/" title="软考复习笔记02：数据库">软考复习笔记02：数据库</a><time datetime="2022-10-20T13:44:30.000Z" title="发表于 2022-10-20 21:44:30">2022-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/80678ee5/" title="软考复习笔记01：操作系统">软考复习笔记01：操作系统</a><time datetime="2022-10-19T15:20:32.000Z" title="发表于 2022-10-19 23:20:32">2022-10-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/89694042/" title="Git使用技巧（二）：从远程仓库拉取特定commit">Git使用技巧（二）：从远程仓库拉取特定commit</a><time datetime="2022-07-22T15:44:03.000Z" title="发表于 2022-07-22 23:44:03">2022-07-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/04/17/LXdE9NKDcUbeGO8.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By stephen zhang</div><div class="footer_custom_text"><a target="_blank" rel="noopener external nofollow noreferrer" href="https://beian.miit.gov.cn/"><img class="icp-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/beian.png"><span>浙ICP备2020030924号-1</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.4.0/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.4.0/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/4.0.31/fancybox.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.1/instantpage.min.js" type="module"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/17.3.1/lazyload.iife.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.4.0/js/search/local-search.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaidWrap = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaidWrap.length) {
+    window.runMermaid = () => {
+      window.loadMermaid = true
+      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+      Array.from($mermaidWrap).forEach((item, index) => {
+        const mermaidSrc = item.firstElementChild
+        const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+        const mermaidID = 'mermaid-' + index
+        const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+        mermaid.mermaidAPI.render(mermaidID, mermaidDefinition, (svgCode) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svgCode)
+        })
+      })
+    }
+
+    const loadMermaid = () => {
+      window.loadMermaid ? runMermaid() : getScript('https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.5/mermaid.min.js').then(runMermaid)
+    }
+
+    window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+  }
+})()</script><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'stark-zhang/blogs',
+    'data-repo-id': 'MDEwOlJlcG9zaXRvcnkzODg0NTQ5OTU=',
+    'data-category-id': 'DIC_kwDOFydaU84CPOs_',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },{"data-mapping":"title","data-input-position":"top","data-loading":"lazy","data-emit-metadata":0})
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
