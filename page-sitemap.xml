@@ -10,6 +10,15 @@
     
     
     <url>
+        <loc>https://blogs.stephen-zhang.cn/categories/</loc>
+        <lastmod>2023-04-02T16:21:44.050Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
         <loc>https://blogs.stephen-zhang.cn/profile/</loc>
         <lastmod>2022-12-07T15:20:27.988Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -66,15 +75,6 @@
     <url>
         <loc>https://blogs.stephen-zhang.cn/commBasic/</loc>
         <lastmod>2022-10-15T08:05:07.856Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/categories/</loc>
-        <lastmod>2022-10-15T08:05:07.854Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
