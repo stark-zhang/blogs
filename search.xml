@@ -5768,6 +5768,57 @@ c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></spa
       </tags>
   </entry>
   <entry>
+    <title>数字图像处理(01)：初见</title>
+    <url>/post/86274a06/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+<p>目前在跟随导师的研究方向，进行数字图像处理方向的学习和工作，因此打算写一点读书笔记在这里。</p>
+<p>使用的入门参考教材见<a href="#Reference">Reference</a>。不过代码实践应该主要使用Python完成，某些情况下可能会使用Matlab；也可能会穿插一些使用HDL(Verilog/SystemVerilog)实现某些算法的内容。</p>
+<p>为什么主要使用Python？</p>
+<ul>
+<li>基础库众多，屏蔽了图像文件预处理的诸多细节，更容易使人专注在算法本身；</li>
+<li>代码容易使用VCS（版本控制系统，如git）进行管理；</li>
+<li>配合PYNQ进行高效开发。</li>
+</ul>
+<p>根据Dr. Gonzalez的定义，数字图像处理至少要包含以下要素：</p>
+<ul>
+<li>使用数字计算机，</li>
+<li>输入数字图像，</li>
+<li>输出可以是数字图像，也可以是对图像的特征提取及识别。</li>
+</ul>
+<h3 id="起源">起源</h3>
+<p>数字图像处理这门学科的起源，最早可以追溯到20世纪早期的新闻业 —— 由于<a href="http://www.hffax.de/history/html/bartlane.html">Bartlane电缆传输系统</a><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>的引入，横跨大西洋的图像传输成为可能。虽然Bartlane系统的持续改进，使图像传输的质量大幅改善，但是我们依然不认为它是数字图像处理技术的一种：它并没有引入数字计算机。</p>
+<p>现代数字图像处理技术是建立在冯·诺依曼架构的计算机之上的。冯·诺伊曼架构包含两个关键概念：a. 暂存数据和程序的存储器；b. 条件分支。这两个关键概念是现代CPU的理论基础。虽然计算机出现于20世纪40年代，但是直到1970年，大规模集成电路(Large-scale Integretion, LI)技术出现后，数字图像处理技术才得到了勉强可以满足需求的算力。</p>
+<p>冷战期间，美苏军备竞赛在太空领域的竞争也客观上促进了数字图像处理技术的发展。</p>
+<h3 id="图像信号">图像信号</h3>
+<h4 id="表示">表示</h4>
+<p>一幅图像可以视作一个二元函数，记作<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>，其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x, y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>是空间坐标或者说平面坐标，而在任意坐标<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>处，函数<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>的幅值称作图像信号的<strong>强度</strong>。对于不同的图像，信号的强度表征的含义也不尽相同。例如，对于灰度图像，信号强度表示图像某点的亮度，或称灰度(grey level)；对于RGB图像，信号强度则表示每个色彩通道的幅值。</p>
+<p>假如坐标<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x, y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>以及函数<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>的幅值都是有限而离散的，我们称这样的图像为数字图像。数字图像由有限个元素组成，这些元素和<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>坐标一一对应，称为像元或者像素(pixel)。</p>
+<h4 id="获取">获取</h4>
+<p><img src="https://s2.loli.net/2023/04/05/TldsurbBy2pPWFE.png" alt="电磁频谱"></p>
+<p>狭义的图像信号仅指人眼可见光范围内，由于光的传播形成的图像；广义上，任何波的传播都可以形成图像。事实上，除了可见光之外，常用于医疗诊断和工业探伤的X射线、用于雷达探测的高频电磁波、用于水下探测的声纳信号以及物体自发放射的红外线等，都可用于成像及分析。</p>
+<p>对不同的波形成的图像，需要使用不同波段的传感器转换数字信号才可以进行分析。现在，多波段融合传感器也是传感器发展的一个潮流方向。不过传感器技术不是本次讨论的重点，故不再赘述。</p>
+<h3 id="Reference">Reference</h3>
+<ol>
+<li><a href="https://book.douban.com/subject/6434627/">Digital Image Processing(3rd Edition)</a>, RafaelC.Gonzalez</li>
+<li><a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_08523801.html">图像处理与图像分析基础(C/C++语言版)</a>, 任明武，2022</li>
+</ol>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>该系统以离散的点集传输灰度图像，这种思想很接近现在的数字图像的概念。 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+]]></content>
+      <categories>
+        <category>uncategorized</category>
+      </categories>
+      <tags>
+        <tag>NJUST</tag>
+        <tag>DIP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>为ZeroTier搭建私有Planet Server</title>
     <url>/post/9f47efb9/</url>
     <content><![CDATA[<h3 id="Preface">Preface</h3>
@@ -5822,57 +5873,6 @@ c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></spa
         <tag>geek</tag>
         <tag>SD-WAN</tag>
         <tag>ZeroTier</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数字图像处理(01)：初见</title>
-    <url>/post/86274a06/</url>
-    <content><![CDATA[<h3 id="Preface">Preface</h3>
-<p>目前在跟随导师的研究方向，进行数字图像处理方向的学习和工作，因此打算写一点读书笔记在这里。</p>
-<p>使用的入门参考教材见<a href="#Reference">Reference</a>。不过代码实践应该主要使用Python完成，某些情况下可能会使用Matlab；也可能会穿插一些使用HDL(Verilog/SystemVerilog)实现某些算法的内容。</p>
-<p>为什么主要使用Python？</p>
-<ul>
-<li>基础库众多，屏蔽了图像文件预处理的诸多细节，更容易使人专注在算法本身；</li>
-<li>代码容易使用VCS（版本控制系统，如git）进行管理；</li>
-<li>配合PYNQ进行高效开发。</li>
-</ul>
-<p>根据Dr. Gonzalez的定义，数字图像处理至少要包含以下要素：</p>
-<ul>
-<li>使用数字计算机，</li>
-<li>输入数字图像，</li>
-<li>输出可以是数字图像，也可以是对图像的特征提取及识别。</li>
-</ul>
-<h3 id="起源">起源</h3>
-<p>数字图像处理这门学科的起源，最早可以追溯到20世纪早期的新闻业 —— 由于<a href="http://www.hffax.de/history/html/bartlane.html">Bartlane电缆传输系统</a><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>的引入，横跨大西洋的图像传输成为可能。虽然Bartlane系统的持续改进，使图像传输的质量大幅改善，但是我们依然不认为它是数字图像处理技术的一种：它并没有引入数字计算机。</p>
-<p>现代数字图像处理技术是建立在冯·诺依曼架构的计算机之上的。冯·诺伊曼架构包含两个关键概念：a. 暂存数据和程序的存储器；b. 条件分支。这两个关键概念是现代CPU的理论基础。虽然计算机出现于20世纪40年代，但是直到1970年，大规模集成电路(Large-scale Integretion, LI)技术出现后，数字图像处理技术才得到了勉强可以满足需求的算力。</p>
-<p>冷战期间，美苏军备竞赛在太空领域的竞争也客观上促进了数字图像处理技术的发展。</p>
-<h3 id="图像信号">图像信号</h3>
-<h4 id="表示">表示</h4>
-<p>一幅图像可以视作一个二元函数，记作<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>，其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x, y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>是空间坐标或者说平面坐标，而在任意坐标<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>处，函数<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>的幅值称作图像信号的<strong>强度</strong>。对于不同的图像，信号的强度表征的含义也不尽相同。例如，对于灰度图像，信号强度表示图像某点的亮度，或称灰度(grey level)；对于RGB图像，信号强度则表示每个色彩通道的幅值。</p>
-<p>假如坐标<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x, y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>以及函数<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>的幅值都是有限而离散的，我们称这样的图像为数字图像。数字图像由有限个元素组成，这些元素和<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span>坐标一一对应，称为像元或者像素(pixel)。</p>
-<h4 id="获取">获取</h4>
-<p><img src="https://s2.loli.net/2023/04/05/TldsurbBy2pPWFE.png" alt="电磁频谱"></p>
-<p>狭义的图像信号仅指人眼可见光范围内，由于光的传播形成的图像；广义上，任何波的传播都可以形成图像。事实上，除了可见光之外，常用于医疗诊断和工业探伤的X射线、用于雷达探测的高频电磁波、用于水下探测的声纳信号以及物体自发放射的红外线等，都可用于成像及分析。</p>
-<p>对不同的波形成的图像，需要使用不同波段的传感器转换数字信号才可以进行分析。现在，多波段融合传感器也是传感器发展的一个潮流方向。不过传感器技术不是本次讨论的重点，故不再赘述。</p>
-<h3 id="Reference">Reference</h3>
-<ol>
-<li><a href="https://book.douban.com/subject/6434627/">Digital Image Processing(3rd Edition)</a>, RafaelC.Gonzalez</li>
-<li><a href="http://www.tup.tsinghua.edu.cn/booksCenter/book_08523801.html">图像处理与图像分析基础(C/C++语言版)</a>, 任明武，2022</li>
-</ol>
-<hr class="footnotes-sep">
-<section class="footnotes">
-<ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>该系统以离散的点集传输灰度图像，这种思想很接近现在的数字图像的概念。 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
-</li>
-</ol>
-</section>
-]]></content>
-      <categories>
-        <category>uncategorized</category>
-      </categories>
-      <tags>
-        <tag>NJUST</tag>
-        <tag>DIP</tag>
       </tags>
   </entry>
 </search>
