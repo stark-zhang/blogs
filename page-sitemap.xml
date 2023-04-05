@@ -11,61 +11,7 @@
     
     <url>
         <loc>https://blogs.stephen-zhang.cn/categories/</loc>
-        <lastmod>2023-04-02T16:21:44.050Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/profile/</loc>
-        <lastmod>2022-12-07T15:20:27.988Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/tags/</loc>
-        <lastmod>2022-10-15T08:05:07.883Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/reading/</loc>
-        <lastmod>2022-10-15T08:05:07.879Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/notes/</loc>
-        <lastmod>2022-10-15T08:05:07.875Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/friends/</loc>
-        <lastmod>2022-10-15T08:05:07.860Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    
-    
-    <url>
-        <loc>https://blogs.stephen-zhang.cn/commMobile/</loc>
-        <lastmod>2022-10-15T08:05:07.858Z</lastmod>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -74,7 +20,61 @@
     
     <url>
         <loc>https://blogs.stephen-zhang.cn/commBasic/</loc>
-        <lastmod>2022-10-15T08:05:07.856Z</lastmod>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/commMobile/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/friends/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/notes/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/profile/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/reading/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    
+    
+    <url>
+        <loc>https://blogs.stephen-zhang.cn/tags/</loc>
+        <lastmod>2023-04-05T05:53:52.933Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
