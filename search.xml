@@ -5978,4 +5978,73 @@ M347 1759 V0 H263 V1759 v1800 v1759 h84z'/></svg></span></span></span><span clas
         <tag>ZeroTier</tag>
       </tags>
   </entry>
+  <entry>
+    <title>可综合的SystemVerilog：打破SystemVerilog只适用于验证的神话（Part 1）</title>
+    <url>/post/a706f59a/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+<p>译者的话：本文是<a href="https://www.sutherland-hdl.com/papers/2013-SNUG-SV_Synthesizable-SystemVerilog_paper.pdf"><em>synthensizing SystemVerilog, Busting the Myth that SystemVerilog is only for Verification</em></a>的译文，计划分成三到四个部分完成，作为译者学习RTL设计的入门纪念。参考文献将以脚注的形式给出。</p>
+<p>关于作者：</p>
+<ul>
+<li><a href="mailto:stuart@sutherland-hdl.com">Stuart Sutherland</a>: Sutherland HDL, Inc.的创始人</li>
+<li><a href="mailto:mills@microchip.com">Don Mills</a>：Microchip公司高级工程师</li>
+</ul>
+<p>以下是译文正文。</p>
+<h3 id="摘要">摘要</h3>
+<p>SystemVerilog绝不仅仅是用于验证的！它最初被发明的时候，其中一个主要目标就是使人们可以使用更少的代码更准确地描述复杂硬件设计的可综合模型。这个目标 已经实现了，而且Synopsys已经在Design Compiler(DC)和Sysnplify-Pro中完成了实现SystemVerilog的主要工作。这篇文章主要测试了SystemVerilog可综合子集的细节，以及展示了相对传统Verilog而言，使用这些新的结构的优势。读者将从本文中学到新的RTL建模技能，这些技能确实可以用更少的代码行进行建模，同时减少潜在的设计错误并实现高综合结果质量。</p>
+<p><em>目标受众：使用ASIC和FPGA参与RTL设计和综合的工程师们。</em></p>
+<h3 id="1-0-引言-——-SystemVerilog-v-s-Verilog的真相">1.0 引言 —— SystemVerilog v.s. Verilog的真相</h3>
+<p>总有一种常见的误解，认为<em>Verilog</em>是一种可综合的硬件建模语言，而<em>SystemVerilog</em>是一种不可综合的验证语言。<strong>这是完全错误的！</strong></p>
+<p>自从1984年Verilog语言被引入以来，它就肩负了两个目标，分别是为硬件建模以及描述硬件测试平台（testbench）。许多Verilog语言的结构，例如<code>if...else...</code>，既可用于建模，也可用于验证。此外Verilog中也存在大量仅可用于验证的结构，例如<code>$display</code>，不存在与它们直接对应的硬件结构。综合关心的是语言中与硬件建模相关的部分，因此原始的Verilog语言中仅有一个子集支持综合。</p>
+<p>IEEE于1995年正式将Verilog标准化，标准号是<strong>1364-1995</strong>，因此它也被称为<strong>Verilog-1995</strong><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>。然后IEEE开始着手扩充Verilog，使之同时支持验证和设计，2001年，标准<strong>1364-2001</strong><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>，或称Verilog-2001发布。一年后，IEEE发布<strong>1364.1-2002 Verilog RTL Synthesis</strong><sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup>标准，正式定义了Verilog-2001中可综合的子集。</p>
+<p>IEEE后来也升级Verilog标准到1364-2005，又称Verilog-2005<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>。然而，集成电路的功能、复杂度和时钟速率在2000年后演化的是如此迅速，以至于Verilog标准的增量更新已经不足以跟上硬件模型和验证测试对语言能力所持续增长的需求。IEEE为增强Verilog语言而定义的新特性越来越多，以至于有必要为其分配一个新的标准编号描述语言的扩展内容，即1800-2005，又称<strong>SystemVerilog</strong> <sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup>。<strong>SystemVerilog并非是一种全新的语言 —— 它只是在Verilog-2005基础上提供了一组扩展。</strong> 分成两份文档的原因之一是为了帮助那些供应Verilog模拟器和综合编译器的公司能专注实现所有的新功能。</p>
+<p><strong>然后是混乱的名称演变……</strong> 2009年，IEEE将Verilog 1364-2005和SystemVerilog扩展（1800-2005）合并为一个文档。出于作者一直无法理解的原因，IEEE选择停用原来的Verilog名称，而将合并后的新标准改称为SystemVerilog。从此，原始的1364 Verilog标准结束了，IEEE批准了<strong>1800-2009</strong>，即SystemVerilog-2009<sup class="footnote-ref"><a href="#fn6" id="fnref6">[6]</a></sup>作为一个完整的硬件设计和验证语言。在IEEE的术语里，Verilog标准已经不复存在，现在只有SystemVerilog标准。<strong>2009年以来，你再也没有使用过Verilog…… 而是使用SytemVerilog进行设计和综合工作！</strong>（IEEE随后发布了SystemVerilog-2012标准，其中包括了对原始的、现已不复存在的Verilog标准的额外增强）</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2023/06/30/wDzfO3UuRkC2o4E.png" alt="Figure 1. Verilog到SystemVerilog的发展"></p>
+<p>值得注意的是，SystemVerilog同时扩展了Verilog在硬件建模和测试验证的能力。Figure 1是语言的发展路线，虽不完善，但是也足以说明SystemVerilog对原始Verilog的大量扩展增强了硬件建模能力。本文的重点就是这些语言结构是如何综合的，以及使用这些SystemVerilog扩展在硬件设计中的优势。</p>
+<p>本文的目的是提供一个在Synopsys Desgin Compiler和/或Synplify-Pro中可综合部分的全面的清单。重点是SystemVerilog增加的那部分组件，以及作为用户如何利用这些改进。为完整起见，本文也会提及不同版本Verilog中的可综合组件，但不会过多讨论其细节。</p>
+<p>还应该注意的是，现在没有一份关于SystemVerilog综合的标准。IEEE选择不更新1364.1以反映<br>
+SystemVerilog中新增的可综合扩展。作者认为这是短视的，同时也是在损害工程社区，但是也系希望本文与旧的1364.1-2002 Verilog综合标准结合使用，能作为一个SystemVerilog可综合子集的官方标准。</p>
+<h3 id="2-数据类型">2 数据类型</h3>
+<h4 id="2-1-值集">2.1 值集</h4>
+<h4 id="2-2-网络类型">2.2 网络类型</h4>
+<h4 id="2-3-变量类型">2.3 变量类型</h4>
+<h4 id="2-4-向量声明（压缩数组）">2.4 向量声明（压缩数组）</h4>
+<h4 id="2-5-数组（非压缩数组）">2.5 数组（非压缩数组）</h4>
+<h4 id="2-6-用户定义类型">2.6 用户定义类型</h4>
+<h3 id="3-参数化建模">3 参数化建模</h3>
+<h3 id="4-共享声明空间-——-packages和-unit">4 共享声明空间 —— <code>packages</code>和<code>$unit</code></h3>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>“1364-1995 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 1995.<br>
+ISBN:.1-55937-727-5 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>“1364-2001 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2001.<br>
+ISBN: 0-7381-2826-0. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>“1364.1-2002 IEEE Standard for Verilog Register Transfer Level Synthesis”, IEEE, Pascataway, New Jersey. Copyright 2002.<br>
+ISBN: 0-7381-3501-1. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p>“P1364-2005 Draft Standard for Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2005.<br>
+ISBN: 0-7381-4850-4 <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn5" class="footnote-item"><p>“1800-2005 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE,<br>
+Pascataway, New Jersey. Copyright 2005. ISBN: 0-7381-4811-3. <a href="#fnref5" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn6" class="footnote-item"><p>“1800-2009 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE,<br>
+Pascataway, New Jersey. Copyright 2009. ISBN: 978-0-7381-6129-7. <a href="#fnref6" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+]]></content>
+      <categories>
+        <category>technical</category>
+        <category>translation</category>
+        <category>synthensizing-sv</category>
+      </categories>
+      <tags>
+        <tag>HDL</tag>
+        <tag>Verilog</tag>
+        <tag>SystemVerilog</tag>
+      </tags>
+  </entry>
 </search>
