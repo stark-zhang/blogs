@@ -6041,8 +6041,33 @@ SystemVerilog中新增的可综合扩展。作者认为这是短视的，同时�
 <li><strong>建议：</strong> 在绝大多数声明中使用<code>logic</code>，使语言基于上下文自动推导该声明的具体类型。避免在RTL模型中使用二态类型。这些类型可能会掩盖某些设计问题（见Sutherland<sup class="footnote-ref"><a href="#fn9" id="fnref9">[9]</a></sup>），而且可能会导致仿真和综合的不匹配。一个例外是在<code>for</code>循环中使用<code>int</code>变量作为迭代器。</li>
 </ul>
 <h4 id="2-4-向量声明（压缩数组）">2.4 向量声明（压缩数组）</h4>
+<p>向量由方括号内明确的比特范围声明，后面跟随向量名。范围的声明形式为<code>[most-significant_bit_number:least-significant_bit_number]</code>。其中最高有效位（msb）和最低有效位（lsb）可以是任何数字，最高有效位可以是二者间最大或最小的数字。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">wire</span>  [<span class="number">31</span>:<span class="number">0</span>] a;   <span class="comment">// 32位向量，小端序</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">1</span>:<span class="number">32</span>] b;   <span class="comment">// 32位向量，大端序</span></span><br></pre></td></tr></table></figure>
+<p>向量的声明、位选以及部分选择（多比特选择）一直是Verilog标准的一部分，且可综合。Verilog-2001新增了对变量的部分选择，同样可综合。</p>
+<p>SystemVerilog称向量为<em>压缩数组</em>，以表示向量是有多个连续存储的比特构成的数组。其中一个重要改进是，SystemVerilog允许使用多个范围声明将向量划分为多个子域。例如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>][<span class="number">7</span>:<span class="number">0</span>] a;   <span class="comment">// 32比特向量，划分为4个8比特的子域</span></span><br><span class="line"></span><br><span class="line">a[<span class="number">2</span>] = <span class="number">8</span>’hFF;         <span class="comment">// 对子域2赋值</span></span><br><span class="line">a[<span class="number">1</span>][<span class="number">0</span>] = <span class="number">1</span>’b1;       <span class="comment">// 选择子域1中的单个比特</span></span><br></pre></td></tr></table></figure>
+<p>多维压缩数组及其选择操作是可综合的。在设计中需要频繁访问某个向量的子域时，该特性会十分有用。这一特性会很有用。例如在上面的例子中，这一特性就使得我们能够更加容易地从32比特的向量中选择字节。</p>
 <h4 id="2-5-数组（非压缩数组）">2.5 数组（非压缩数组）</h4>
+<p>SystemVerilog允许为线网类型、变量类型和用户定义类型（见2.6节）声明一维或多维数组。数组的维度声明在数组名之后。例如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] LUT [<span class="number">0</span>:<span class="number">255</span>];              <span class="comment">// 256字节的一维数组</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] RGB [<span class="number">0</span>:<span class="number">15</span>][<span class="number">0</span>:<span class="number">15</span>][<span class="number">0</span>:<span class="number">15</span>];   <span class="comment">// 多字节的三维数组</span></span><br></pre></td></tr></table></figure>
+<p>使用索引访问数组中的元素：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line">data = LUT[<span class="number">7</span>];          <span class="comment">// 访问索引为7的字节</span></span><br><span class="line">RGB[<span class="number">0</span>][<span class="number">0</span>][<span class="number">0</span>] = <span class="number">8</span>’h1A;   <span class="comment">// 为索引为0, 0, 0的字节赋值</span></span><br></pre></td></tr></table></figure>
+<p>Verilog的数组和选择操作时可综合的。</p>
+<p>SystemVerilog对Verilog数组进行了多个方面的扩展，其中有一些对复杂设计建模非常重要。这些将在下文中讨论。</p>
+<h5 id="2-5-1-C语言风格的数组声明">2.5.1 C语言风格的数组声明</h5>
+<p>Verilog数组由数组的地址范围声明，语法是<code>[first_addr : last_addr]</code>，如<code>[0:255]</code>。SystemVerilog则允许使用和C语言相同的方式，只声明数组的大小。如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] LUT [<span class="number">256</span>];          <span class="comment">// 256字节的一维数组</span></span><br><span class="line"><span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] RGB [<span class="number">16</span>][<span class="number">16</span>][<span class="number">16</span>];   <span class="comment">// 多个字节构成的三维数组</span></span><br></pre></td></tr></table></figure>
+<p>当使用这种语法是，数组寻址总是从0开始，结束于数组的大小减一。这个方便的小改动是可综合的。</p>
+<h5 id="2-5-2-数组复制">2.5.2 数组复制</h5>
+<h5 id="2-5-3-将值列表赋值给数组">2.5.3 将值列表赋值给数组</h5>
+<h5 id="2-5-4-将数组传递给模块端口、任务和函数">2.5.4 将数组传递给模块端口、任务和函数</h5>
+<h5 id="2-5-5-数组查询系统函数">2.5.5 数组查询系统函数</h5>
+<h5 id="2-5-6-不可综合的数组改进">2.5.6 不可综合的数组改进</h5>
 <h4 id="2-6-用户定义类型">2.6 用户定义类型</h4>
+<h5 id="2-6-1-枚举类型">2.6.1 枚举类型</h5>
+<h5 id="2-6-2-结构体">2.6.2 结构体</h5>
+<h5 id="2-6-3-联合体">2.6.3 联合体</h5>
+<h5 id="2-6-4-类型定义typedef">2.6.4 类型定义<code>typedef</code></h5>
 <h3 id="3-参数化建模">3 参数化建模</h3>
 <p>Verilog具有使用参数和参数重定义使得模型可配置和可扩展的能力。参数化模型也是Verilog标准的一部分，本文不予讨论。</p>
 <p>SystemVerilog扩展了Verilog中参数的定义和重定义，以允许参数化的数据类型，例如：</p>
@@ -6086,8 +6111,13 @@ SystemVerilog中新增的可综合扩展。作者认为这是短视的，同时�
 </ul>
 <p><strong>建议：</strong> 现在开始使用包！包提供了干净、简单的方法在整个项目中重用任务、函数以及用户定义类型。</p>
 <h5 id="4-1-2-import语句的位置">4.1.2 <code>import</code>语句的位置</h5>
+<p><code>import</code>语句的位置在前两个例子中是很重关于的。为了在端口列表中引用包内条目的定义，该条目必须在引用前被导入。在SystemVerilog-2005中，<code>import</code>语句只能出现在端口列表之后，这太晚了。SystemVerilog-2009允许<code>import</code>语句出现在端口列表之前，甚至是参数列表之前。这一增强已经发布了三年之久，但是Synopsys仍没有实现这一微小而重要的改进。</p>
+<p>注意：DC支持在端口列表前放置<code>import</code>语句，但是需要手动开启<code>set hdlin_sverilog_std_2009</code>。截至本文撰写时，Synplify-Pro仍不支持这一特性。</p>
 <h5 id="4-1-3-将一个包导入另一个包内">4.1.3 将一个包导入另一个包内</h5>
+<p>一个包可以导入或者引用来自其他的包的定义。将包导入其他的包也是可综合的。SystemVerilog也允许包链（Package Chaining），一种简化包间引用的方法。</p>
+<p><em>注意：</em> DC尚不支持包链。关于包链的更多信息，参考第12.6节。</p>
 <h5 id="4-1-4-包的编译顺序">4.1.4 包的编译顺序</h5>
+<p>SystemVerilog的语法要求包内条目在被引用前必须先被编译。这意味着编译时存在文件依赖顺序，同时也意味着引用了包内条目的模块无法被单独编译 —— 包必须在模块之前被编译（或者预编译，如果工具支持增量编译的话）。</p>
 <h4 id="4-2-unit">4.2 <code>$unit</code></h4>
 <p>在包被添加到标准之前，SystemVerilog还提供了一种不同的机制用于创建多模块共享的定义，即<code>$unit</code>，一个伪全局命名空间。任何在具名声明空间外定义的声明都属于<code>$unit</code>包。在下面的例子中，<code>bool_t</code>的定义在两模块之外，因此它属于<code>$unit</code>声明空间。</p>
 <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> <span class="keyword">bit</span> &#123;FALSE, TRUE&#125; bool_t;</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> alu (...);</span><br><span class="line">  bool_t success_flag;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> decoder (...);</span><br><span class="line">  bool_t a_ok;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
