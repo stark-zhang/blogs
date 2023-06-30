@@ -5996,7 +5996,7 @@ M347 1759 V0 H263 V1759 v1800 v1759 h84z'/></svg></span></span></span><span clas
 <p>总有一种常见的误解，认为<em>Verilog</em>是一种可综合的硬件建模语言，而<em>SystemVerilog</em>是一种不可综合的验证语言。<strong>这是完全错误的！</strong></p>
 <p>自从1984年Verilog语言被引入以来，它就肩负了两个目标，分别是为硬件建模以及描述硬件测试平台（testbench）。许多Verilog语言的结构，例如<code>if...else...</code>，既可用于建模，也可用于验证。此外Verilog中也存在大量仅可用于验证的结构，例如<code>$display</code>，不存在与它们直接对应的硬件结构。综合关心的是语言中与硬件建模相关的部分，因此原始的Verilog语言中仅有一个子集支持综合。</p>
 <p>IEEE于1995年正式将Verilog标准化，标准号是<strong>1364-1995</strong>，因此它也被称为<strong>Verilog-1995</strong><sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>。然后IEEE开始着手扩充Verilog，使之同时支持验证和设计，2001年，标准<strong>1364-2001</strong><sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup>，或称Verilog-2001发布。一年后，IEEE发布<strong>1364.1-2002 Verilog RTL Synthesis</strong><sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup>标准，正式定义了Verilog-2001中可综合的子集。</p>
-<p>IEEE后来也升级Verilog标准到1364-2005，又称Verilog-2005<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>。然而，集成电路的功能、复杂度和时钟速率在2000年后演化的是如此迅速，以至于Verilog标准的增量更新已经不足以跟上硬件模型和验证测试对语言能力所持续增长的需求。IEEE为增强Verilog语言而定义的新特性越来越多，以至于有必要为其分配一个新的标准编号描述语言的扩展内容，即1800-2005，又称<strong>SystemVerilog</strong> <sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup>。<strong>SystemVerilog并非是一种全新的语言 —— 它只是在Verilog-2005基础上提供了一组扩展。</strong> 分成两份文档的原因之一是为了帮助那些供应Verilog模拟器和综合编译器的公司能专注实现所有的新功能。</p>
+<p>IEEE后来也升级Verilog标准到1364-2005，又称Verilog-2005<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup>。然而，集成电路的功能、复杂度和时钟速率在2000年后演化的是如此迅速，以至于Verilog标准的增量更新已经不足以跟上硬件模型和验证测试对语言能力所持续增长的需求。IEEE为增强Verilog语言而定义的新特性越来越多，以至于有必要为其分配一个新的标准编号描述语言的扩展内容，即1800-2005，又称<strong>SystemVerilog</strong> <sup class="footnote-ref"><a href="#fn5" id="fnref5">[5]</a></sup>。<strong>SystemVerilog并非是一种全新的语言 —— 它只是在Verilog-2005基础上提供了一组扩展。</strong> 分成两份文档的原因之一是为了帮助那些供应Verilog仿真器和综合编译器的公司能专注实现所有的新功能。</p>
 <p><strong>然后是混乱的名称演变……</strong> 2009年，IEEE将Verilog 1364-2005和SystemVerilog扩展（1800-2005）合并为一个文档。出于作者一直无法理解的原因，IEEE选择停用原来的Verilog名称，而将合并后的新标准改称为SystemVerilog。从此，原始的1364 Verilog标准结束了，IEEE批准了<strong>1800-2009</strong>，即SystemVerilog-2009<sup class="footnote-ref"><a href="#fn6" id="fnref6">[6]</a></sup>作为一个完整的硬件设计和验证语言。在IEEE的术语里，Verilog标准已经不复存在，现在只有SystemVerilog标准。<strong>2009年以来，你再也没有使用过Verilog…… 而是使用SytemVerilog进行设计和综合工作！</strong>（IEEE随后发布了SystemVerilog-2012标准，其中包括了对原始的、现已不复存在的Verilog标准的额外增强）</p>
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2023/06/30/wDzfO3UuRkC2o4E.png" alt="Figure 1. Verilog到SystemVerilog的发展"></p>
 <p>值得注意的是，SystemVerilog同时扩展了Verilog在硬件建模和测试验证的能力。Figure 1是语言的发展路线，虽不完善，但是也足以说明SystemVerilog对原始Verilog的大量扩展增强了硬件建模能力。本文的重点就是这些语言结构是如何综合的，以及使用这些SystemVerilog扩展在硬件设计中的优势。</p>
@@ -6004,34 +6004,123 @@ M347 1759 V0 H263 V1759 v1800 v1759 h84z'/></svg></span></span></span><span clas
 <p>还应该注意的是，现在没有一份关于SystemVerilog综合的标准。IEEE选择不更新1364.1以反映<br>
 SystemVerilog中新增的可综合扩展。作者认为这是短视的，同时也是在损害工程社区，但是也系希望本文与旧的1364.1-2002 Verilog综合标准结合使用，能作为一个SystemVerilog可综合子集的官方标准。</p>
 <h3 id="2-数据类型">2 数据类型</h3>
+<p><strong>注意</strong>：本文使用的术语“值集”（Value Sets）用于表示二态值（0, 1）和四态值（0, 1, X, Z）。而术语“数据类型”是一个通用术语，泛指所有的线网类型、变量类型和用户定义类型。在IEEE正式的SystemVerilog标准<sup class="footnote-ref"><a href="#fn7" id="fnref7">[7]</a></sup>中，这两个术语的用法与此处不同，这是因为标准文档主要是面向提供仿真器或者综合编译器一类软件工具的公司和组织。标准中使用的术语，诸如“类型”（types）、“对象”（objects）和“类别”（kinds），对于工具的实现者具有特殊含义，但是作者认为它们对于使用SystemVerilog的工程师们既不通俗也不直观。</p>
 <h4 id="2-1-值集">2.1 值集</h4>
-<h4 id="2-2-网络类型">2.2 网络类型</h4>
+<p>原始Verilog中仅存在四态值，即向量中的每个比特可以取值0, 1, X, Z。SystemVerilog在此基础上增加了表示二态值的能力，即每个比特只能取值0或1。相应地，增加了新的关键字<code>bit</code>和<code>logic</code>分别用于表示二态值和四态值。SystemVerilog中的线网类型，如<code>wire</code>，只能使用<code>logic</code>的四态值集。对变量而言，四态值类型和二态值类型都是可用的。（对于仿真器和综合编译器的实现者而言，这两个关键字还有更多的含义，不过对于理解如何通过SystemVerilog进行模拟设计而言已经足够了。）</p>
+<p>关键字<code>bit</code>和<code>logic</code>也可以在不明确定义线网类型或变量类型的情况下使用，此时具体是线网还是变量是通过上下文自动推导得到的。关键字<code>bit</code>总是被推导为变量类型，而大多数情况下，关键字<code>logic</code>会被推导为变量类型，而在与关键字<code>input</code>、<code>inout</code>一起使用时，才会被推导为线网类型。下面的声明展示了这些推导规则：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> A;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> M (</span><br><span class="line">  <span class="comment">// 带推导的模块端口声明</span></span><br><span class="line">  <span class="keyword">input</span>         i1, <span class="comment">// 推导为四态线网</span></span><br><span class="line">  <span class="keyword">input</span> <span class="keyword">logic</span>   i2, <span class="comment">// 推导为四态线网</span></span><br><span class="line">  <span class="keyword">input</span> <span class="keyword">bit</span>     i3, <span class="comment">// 推导为二态变量</span></span><br><span class="line">  <span class="keyword">output</span>        o1, <span class="comment">// 推导为四态线网</span></span><br><span class="line">  <span class="keyword">output</span> <span class="keyword">logic</span>  o2, <span class="comment">// 推导为四态变量</span></span><br><span class="line">  <span class="keyword">output</span> <span class="keyword">bit</span>    o3  <span class="comment">// 推导为二态变量</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 带推导或明确声明的内部信号</span></span><br><span class="line">  <span class="keyword">bit</span>   clock;          <span class="comment">// 推导为二态变量</span></span><br><span class="line">  <span class="keyword">logic</span> reset;          <span class="comment">// 推导为四态变量</span></span><br><span class="line">  <span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] data;     <span class="comment">// 推导为四态变量</span></span><br><span class="line">  <span class="keyword">wire</span>  [<span class="number">7</span>:<span class="number">0</span>] n1;       <span class="comment">// 显式声明为现网类型，推导为四态logic</span></span><br><span class="line">  <span class="keyword">wire</span> <span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] n2;  <span class="comment">// 显式声明为四态线网</span></span><br><span class="line">  <span class="keyword">var</span>   [<span class="number">7</span>:<span class="number">0</span>] v1;       <span class="comment">// 显式声明为变量，推导为logic</span></span><br><span class="line">  <span class="keyword">var</span>   <span class="keyword">logic</span> [<span class="number">7</span>:<span class="number">0</span>] v2; <span class="comment">// 显式声明为四态变量</span></span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><em><strong>重要：</strong> 在综合中，<code>bit</code>和<code>logic</code>是等同的，四态和二态值集仅用于仿真，对综合无意义。</em></p>
+<ul>
+<li><strong>SystemVerilog的优势之一</strong>：不再需要担心模块端口应该声明为<code>wire</code>或<code>reg</code>（更明确些，现网类型还是变量类型）。在SystemVerilog中，你可以将模块端口和局部信号都声明为<code>logic</code>，它们将会被正确地推导为合适的线网类型或者变量类型（可能偶有例外，工程师有时也会希望明确地使用和推导结果不同的类型，但是此种例外较少见）。</li>
+</ul>
+<p>注意验证代码略有不同。在testbench中，随机生成的变量应该被声明为<code>bit</code>（二态）而非<code>logic</code>（四态）。关于在设计与验证代码中二态和四态类型的详细讨论，见Sutherland<sup class="footnote-ref"><a href="#fn8" id="fnref8">[8]</a></sup>。</p>
+<h4 id="2-2-线网类型">2.2 线网类型</h4>
+<p>可综合的线网类型有：</p>
+<ul>
+<li><code>wire</code>和<code>tri</code>：允许并支持多驱动的互联线网</li>
+<li><code>supply0</code>和<code>supply1</code>：分别为带有常量0和常量1的互联线网</li>
+<li><code>wand</code>、<code>triand</code>、<code>wor</code>和<code>trior</code>：将多个驱动相与（AND）或相或（OR）的互联线网</li>
+</ul>
+<p>由于它们一直都是Verilog的一部分，本文不讨论这些线网类型进行综合时的细节。请参考Verilog RTL综合标准1364.1或者综合编译器的文档以获取更多传统Verilog类型综合的信息。</p>
+<ul>
+<li><strong>SystemVerilog优势之二</strong>（至少它应该算作优势）：SystemVerilog同时提供了能对设计工作带来巨大潜在优势的线网类型<code>uwire</code>，但是它现在尚不支持综合。本文的第12章将详细介绍为什么在设计工作中<code>uwire</code>是一个重要的优势。</li>
+</ul>
 <h4 id="2-3-变量类型">2.3 变量类型</h4>
+<p>变量用于过程代码，或称<code>alway</code>块中。Verilog/SystemVerilog均要求过程赋值语句的左侧必须是变量类型。SystemVerilog中可综合的变量类型如下：</p>
+<ul>
+<li><code>reg</code>：用户自定义长度的通用四态变量</li>
+<li><code>integer</code>：一个32比特的四态变量</li>
+<li><code>logic</code>：推导为用户自定义长度的通用四态变量，除了位于模块的<code>input</code>/<code>inout</code>端口上</li>
+<li><code>bit</code>：推导为用户自定义长度的通用二态变量</li>
+<li><code>byte</code>、<code>shortint</code>、<code>int</code>和<code>longint</code>：长度分别为8比特、16比特、32比特和64比特的二态变量</li>
+</ul>
+<p><code>reg</code>和<code>integer</code>早已是Verilog标准的一部分，本文不再详细讨论。</p>
+<p><code>logic</code>严格意义上不能算是变量类型，但是在绝大多数上下文中，它通常被推导为<code>reg</code>类型。因此它可以被用于替代<code>reg</code>，使语言推导出变量。</p>
+<p><code>byte</code>、<code>shortint</code>、<code>int</code>和<code>longint</code>只可用于存储二态值。综合会将其视作具有相同向量长度的四态<code>reg</code>变量。<strong>注意：</strong> 由于综合过程不回为耻二态的行为，因此可能会存在仿真和综合后功能不匹配的风险。一个潜在的区别是，二态变量在综合中每个比特的初始值总是0，而综合实现时每个比特可能是0也可能是1。</p>
+<ul>
+<li><strong>建议：</strong> 在绝大多数声明中使用<code>logic</code>，使语言基于上下文自动推导该声明的具体类型。避免在RTL模型中使用二态类型。这些类型可能会掩盖某些设计问题（见Sutherland<sup class="footnote-ref"><a href="#fn9" id="fnref9">[9]</a></sup>），而且可能会导致仿真和综合的不匹配。一个例外是在<code>for</code>循环中使用<code>int</code>变量作为迭代器。</li>
+</ul>
 <h4 id="2-4-向量声明（压缩数组）">2.4 向量声明（压缩数组）</h4>
 <h4 id="2-5-数组（非压缩数组）">2.5 数组（非压缩数组）</h4>
 <h4 id="2-6-用户定义类型">2.6 用户定义类型</h4>
 <h3 id="3-参数化建模">3 参数化建模</h3>
+<p>Verilog具有使用参数和参数重定义使得模型可配置和可扩展的能力。参数化模型也是Verilog标准的一部分，本文不予讨论。</p>
+<p>SystemVerilog扩展了Verilog中参数的定义和重定义，以允许参数化的数据类型，例如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> adder #(<span class="keyword">parameter</span> <span class="keyword">type</span> dtype = <span class="keyword">logic</span> [<span class="number">0</span>:<span class="number">0</span>]) <span class="comment">// 默认为1比特位宽</span></span><br><span class="line">              (<span class="keyword">input</span> dtype a, b,</span><br><span class="line">               <span class="keyword">output</span> dtype sum);</span><br><span class="line">  <span class="keyword">assign</span> sum = a + b;</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> top (</span><br><span class="line">  <span class="keyword">input</span> <span class="keyword">logic</span> [<span class="number">15</span>:<span class="number">0</span>] a, b,</span><br><span class="line">  <span class="keyword">input</span> <span class="keyword">logic</span> [<span class="number">31</span>:<span class="number">0</span>] c, d,</span><br><span class="line">  <span class="keyword">output</span> <span class="keyword">logic</span> [<span class="number">15</span>:<span class="number">0</span>] r1,</span><br><span class="line">  <span class="keyword">output</span> <span class="keyword">logic</span> [<span class="number">31</span>:<span class="number">0</span>] r2);</span><br><span class="line"></span><br><span class="line">  adder <span class="variable">#(.dtype(logic [15:0]))         i1 (a, b, r1)</span>; <span class="comment">// 16位加法器</span></span><br><span class="line">  adder <span class="variable">#(.dtype(logic signed [31:0]))  i2 (c, c, r2)</span>; <span class="comment">// 32位有符号加法器</span></span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p>参数化数据类型是可综合的。注意SystemVerilog-2009使关键字<code>parameter</code>在模块参数列表<code>#(...)</code>中成为可选项，但是DC依然要求该关键字。</p>
 <h3 id="4-共享声明空间-——-packages和-unit">4 共享声明空间 —— <code>packages</code>和<code>$unit</code></h3>
+<h4 id="4-1-包">4.1 包</h4>
+<p>原始的Verilog标准中并没有共享的生命空间。每个模块包含所有在此模块中使用的声明。这是Verilog的一个主要的局限性。如果相同的参数、任务或函数定义被多个模块需要，设计者必须采用笨拙而糟糕的方法，通常是配个编译器指令<code> `ifdef</code>和<code> `include</code>。SystemVerilog添加了一系列用户定义类型、面向对象的类定义以及随机约束，这使得缺少共享命名空间的问题成为了一个严峻的问题。</p>
+<p>SystemVerilog添加了用户自定义包，以克服Verilog的这个缺点。包提供了一个可以被多个设计模块，也包括验证代码，引用的声明空间。可以在包中出现的可综合项目如下：</p>
+<ul>
+<li><code>parameter</code>和<code>localparam</code>常量的定义</li>
+<li><code>const</code>变量定义</li>
+<li><code>typedef</code>用户自定义变量</li>
+<li>完全自动化的<code>task</code>和<code>function</code>定义</li>
+<li>引用其他包的<code>import</code>语句</li>
+<li>用于包链的<code>export</code>语句</li>
+</ul>
+<p>一个包的简单示例如下：</p>
+ <figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> alu_types;</span><br><span class="line">  <span class="keyword">localparam</span> DELAY = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">logic</span> [<span class="number">31</span>:<span class="number">0</span>] bus32_t;</span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">logic</span> [<span class="number">63</span>:<span class="number">0</span>] bus64_t;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">enum</span> <span class="keyword">logic</span> [<span class="number">3</span>:<span class="number">0</span>] &#123;ADD, SUB, ...&#125; opcode_t;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">    bus32_t i0, i1;</span><br><span class="line">    opcode_t opcode;</span><br><span class="line">  &#125; instr_t;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="keyword">automatic</span> <span class="keyword">logic</span> parity_gen(<span class="keyword">input</span> d);</span><br><span class="line">    <span class="keyword">return</span> ^d;</span><br><span class="line">  <span class="keyword">endfunction</span></span><br><span class="line"><span class="keyword">endpackage</span></span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>在包中定义了的<code>parameter</code>不可以被重定义，<code>localparam</code>同理</li>
+<li>综合要求包中定义的<code>task</code>和<code>function</code>必须声明为<code>automatic</code></li>
+</ul>
+<h5 id="4-1-1-引用包定义">4.1.1 引用包定义</h5>
+<p>包内的定义可以被设计块（例如<code>module</code>和<code>interface</code>）通过以下三种方式引用：</p>
+<ul>
+<li>显式包引用</li>
+<li>显式<code>import</code>语句</li>
+<li>通配<code>import</code>语句</li>
+</ul>
+<p>通过<code>packages::item</code>的方式，可以对包内定义的条目进行<em>显示引用</em>。例如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> alu</span><br><span class="line">  (<span class="keyword">input</span> alu_types::instr_t instruction,  <span class="comment">// 端口列表中的引用</span></span><br><span class="line">   <span class="keyword">output</span> alu_types::bus64_t result );</span><br><span class="line">  alu_types::bus64_t temp;                <span class="comment">// 模块内部的引用</span></span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p>对包内条目的显式引用不会使之在该模块内其他位置可见。因此每次使用该定义时，都必须显式进行引用。</p>
+<p>通过<code>import</code>语句<em>显式导入</em>包内条目。条目一旦被导入，即可在该模块中被多次引用。如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> alu</span><br><span class="line">  <span class="keyword">import</span> alu_types::bus64_t;</span><br><span class="line">  (<span class="keyword">input</span> alu_types::instr_t instruction, <span class="comment">// 显式引用</span></span><br><span class="line">   <span class="keyword">output</span> bus64_t result );              <span class="comment">// bus64_t已被导入</span></span><br><span class="line">  bus64_t temp;                          <span class="comment">// bus64_t已被导入</span></span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p><em>通配导入</em>使用<code>*</code>表示包内所有的条目。通配导入使得包内所有条目在模块中均可见。如：</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">module</span> alu</span><br><span class="line">  <span class="keyword">import</span> alu_types::*;</span><br><span class="line">  (<span class="keyword">input</span> instr_t instruction,   <span class="comment">// instr_t已被导入</span></span><br><span class="line">   <span class="keyword">output</span> bus64_t result );     <span class="comment">// bus64_t已被导入</span></span><br><span class="line">  bus64_t temp;                 <span class="comment">// bus64_t已被导入</span></span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>SystemVerilog优势之六：</strong> 包可以消除冗余代码，消除不同设计块之间可能存在不匹配的风险，以及减少维护冗余代码的难度。</li>
+</ul>
+<p><strong>建议：</strong> 现在开始使用包！包提供了干净、简单的方法在整个项目中重用任务、函数以及用户定义类型。</p>
+<h5 id="4-1-2-import语句的位置">4.1.2 <code>import</code>语句的位置</h5>
+<h5 id="4-1-3-将一个包导入另一个包内">4.1.3 将一个包导入另一个包内</h5>
+<h5 id="4-1-4-包的编译顺序">4.1.4 包的编译顺序</h5>
+<h4 id="4-2-unit">4.2 <code>$unit</code></h4>
+<p>在包被添加到标准之前，SystemVerilog还提供了一种不同的机制用于创建多模块共享的定义，即<code>$unit</code>，一个伪全局命名空间。任何在具名声明空间外定义的声明都属于<code>$unit</code>包。在下面的例子中，<code>bool_t</code>的定义在两模块之外，因此它属于<code>$unit</code>声明空间。</p>
+<figure class="highlight verilog"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> <span class="keyword">bit</span> &#123;FALSE, TRUE&#125; bool_t;</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> alu (...);</span><br><span class="line">  bool_t success_flag;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> decoder (...);</span><br><span class="line">  bool_t a_ok;</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">endmodule</span></span><br></pre></td></tr></table></figure>
+<p><code>$unit</code>可以包含的用户定义的类型与具名包是相同的，综合限制也相同。</p>
+<p><strong>注意：</strong> <code>$unit</code>是一个危险的共享命名空间，充斥着各种风险。简单来说，它带来的风险如下：</p>
+<ol>
+<li><code>$unit</code>中的定义可以散落在多个文件中，使其维护如噩梦一般</li>
+<li>当<code>$unit</code>中的定义分布在多个文件中时，这些文件必须以特定的顺序被编译，以保证每个定义在引用前都被编译</li>
+<li>每次调用编译器都会开启一个新的<code>$unit</code>空间，它不共享其他空间内的声明。因此同时编译多个文件的编译器（如VCS）将看到多个<code>$unit</code>空间，而独立编译每个文件的编译器（如DC）将看到多个独立的<code>$unit</code>空间。</li>
+<li>在同一个命名空间中多次定义相同的名字在SystemVerilog中是非法的。因此如果一个文件在<code>$unit</code>中定义了<code>bool_t</code>，而另一个文件也在<code>$unit</code>中定义了<code>bool_t</code>，并且这两个文件一起编译的话，就会发生编译错误或elaboration错误。</li>
+<li>具名包可以被导入<code>$unit</code>，但是将同一个包多次导入同一命名空间是非法的</li>
+</ol>
+<p><strong>建议：应当完全避免使用<code>$unit</code>！</strong> 通过具名包共享定义可以有效避免<code>$unit</code>带来的风险。</p>
 <hr class="footnotes-sep">
 <section class="footnotes">
 <ol class="footnotes-list">
-<li id="fn1" class="footnote-item"><p>“1364-1995 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 1995.<br>
-ISBN:.1-55937-727-5 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+<li id="fn1" class="footnote-item"><p>“1364-1995 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 1995. ISBN:.1-55937-727-5 <a href="#fnref1" class="footnote-backref">↩︎</a></p>
 </li>
-<li id="fn2" class="footnote-item"><p>“1364-2001 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2001.<br>
-ISBN: 0-7381-2826-0. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+<li id="fn2" class="footnote-item"><p>“1364-2001 IEEE Standard Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2001. ISBN: 0-7381-2826-0. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
 </li>
-<li id="fn3" class="footnote-item"><p>“1364.1-2002 IEEE Standard for Verilog Register Transfer Level Synthesis”, IEEE, Pascataway, New Jersey. Copyright 2002.<br>
-ISBN: 0-7381-3501-1. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+<li id="fn3" class="footnote-item"><p>“1364.1-2002 IEEE Standard for Verilog Register Transfer Level Synthesis”, IEEE, Pascataway, New Jersey.Copyright 2002. ISBN: 0-7381-3501-1. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
 </li>
-<li id="fn4" class="footnote-item"><p>“P1364-2005 Draft Standard for Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2005.<br>
-ISBN: 0-7381-4850-4 <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+<li id="fn4" class="footnote-item"><p>“P1364-2005 Draft Standard for Verilog Hardware Description Language”, IEEE, Pascataway, New Jersey. Copyright 2005. ISBN: 0-7381-4850-4 <a href="#fnref4" class="footnote-backref">↩︎</a></p>
 </li>
-<li id="fn5" class="footnote-item"><p>“1800-2005 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE,<br>
-Pascataway, New Jersey. Copyright 2005. ISBN: 0-7381-4811-3. <a href="#fnref5" class="footnote-backref">↩︎</a></p>
+<li id="fn5" class="footnote-item"><p>“1800-2005 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE, Pascataway, New Jersey. Copyright 2005. ISBN: 0-7381-4811-3. <a href="#fnref5" class="footnote-backref">↩︎</a></p>
 </li>
-<li id="fn6" class="footnote-item"><p>“1800-2009 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE,<br>
-Pascataway, New Jersey. Copyright 2009. ISBN: 978-0-7381-6129-7. <a href="#fnref6" class="footnote-backref">↩︎</a></p>
+<li id="fn6" class="footnote-item"><p>“1800-2009 IEEE Standard for SystemVerilog: Unified Hardware Design, Specification and Verification Language”, IEEE, Pascataway, New Jersey. Copyright 2009. ISBN: 978-0-7381-6129-7. <a href="#fnref6" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn7" class="footnote-item"><p>“1800-2012 IEEE Standard for System Verilog: Unified Hardware Design, Specification and Verification Language”, IEEE, Pascataway, New Jersey. Copyright 2013. ISBN: 978-0-7381-8110-3 (PDF), 978-0-7381-8111-0 (print). <a href="#fnref7" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn8" class="footnote-item"><p>Sutherland, “I’m Still in Love with My X!”, Design and Verification Conference (DVCon), San Jose, California, February 2013. <a href="#fnref8" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn9" class="footnote-item"><p>Sutherland, “I’m Still in Love with My X!”, Design and Verification Conference (DVCon), San Jose, California, February 2013. <a href="#fnref9" class="footnote-backref">↩︎</a></p>
 </li>
 </ol>
 </section>
