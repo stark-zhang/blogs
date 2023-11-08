@@ -5932,6 +5932,45 @@ M347 1759 V0 H263 V1759 v1800 v1759 h84z'/></svg></span></span></span><span clas
       </tags>
   </entry>
   <entry>
+    <title>AXI-4接口规范浅析</title>
+    <url>/post/f46b60a4/</url>
+    <content><![CDATA[<h3 id="Preface">Preface</h3>
+<p><a href="https://www.arm.com/architecture/system-architectures/amba/amba-specifications">AMBA</a>(<strong>A</strong>dvanced <strong>M</strong>icrocontroller <strong>B</strong>us <strong>A</strong>rchitecture, 先进微控制器总线架构)是arm公司提出的一种高性能片上总线架构，目前最新版本是AMBA 5。AMBA是由很多协议组成的协议簇，例如本文主要涉及的AMBA 4，主要由以下协议构成：</p>
+<ul>
+<li><strong>A</strong>dvanced e<strong>X</strong>tensible <strong>I</strong>nterface: 先进可扩展接口，即AXI，本文的侧重点</li>
+<li><strong>A</strong>dvanced <strong>P</strong>eriphreal <strong>B</strong>us: 先进外设总线，即APB，用于连接各个外设</li>
+<li><strong>A</strong>devaced <strong>T</strong>race <strong>B</strong>us: 先进追踪总线，即ATB，主要用于总线的调试</li>
+<li>ACE protocol: 系统一致性扩展协议，是AXI的增强</li>
+<li>ARM Low-Power Interface: ARM低功耗接口</li>
+</ul>
+<p>Xilinx 7-series FPGA提供了完整的AXI-4的支持，广泛使用于Xilinx第一方IP core之中，例如MIG(Memory Interface generator)、XDMA(DMA/Bridge Subsystem for PCI Express)等，用于支持数据量较大、速度要求较高的场景。那么为了更好地和这些第一方IP进行交互，了解AXI-4总线是必要的。</p>
+<h3 id="AXI-4-Overview">AXI-4 Overview</h3>
+<ul>
+<li>AXI4-Full: AXI-MM</li>
+<li>AXI4-Lite</li>
+<li>AXI4-Stream: AXI-ST</li>
+</ul>
+<h3 id="AXI4-Full-AXI4-MM">AXI4-Full(AXI4-MM)</h3>
+<h3 id="AXI4-ST">AXI4-ST</h3>
+<h3 id="AXI4-Lite">AXI4-Lite</h3>
+<h3 id="Reference">Reference</h3>
+<ol>
+<li><a href="https://developer.arm.com/documentation/ihi0022/e">AMBA AXI and ACE Protocol Specification - IHI0022E</a></li>
+<li><a href="https://developer.arm.com/documentation/ihi0051/b">AMBA AXI-Stream Protocol Specification - IHI0051B</a></li>
+<li><a href="https://docs.xilinx.com/v/u/en-US/ug1037-vivado-axi-reference-guide">Xilinx AXI Reference Guide - UG1037</a></li>
+<li><a href="https://docs.xilinx.com/v/u/1.1-English/ug586_7Series_MIS">Xilinx 7 Series FPGAs Memory Interface Solutions User Guide (AXI) - UG586</a></li>
+<li><a href="https://docs.xilinx.com/r/en-US/pg195-pcie-dma">Xilinx DMA/Bridge Subsystem for PCI Express Product Guide - PG195</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>technical</category>
+      </categories>
+      <tags>
+        <tag>HDL</tag>
+        <tag>FPGA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>可综合的SystemVerilog：打破SystemVerilog只适用于验证的神话（Part 1）</title>
     <url>/post/a706f59a/</url>
     <content><![CDATA[<h3 id="Preface">Preface</h3>
@@ -6196,34 +6235,6 @@ SystemVerilog中新增的可综合扩展。作者认为这是短视的，同时�
         <tag>HDL</tag>
         <tag>Verilog</tag>
         <tag>SystemVerilog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>AXI-4接口规范浅析</title>
-    <url>/post/f46b60a4/</url>
-    <content><![CDATA[<h3 id="Preface">Preface</h3>
-<p><a href="https://www.arm.com/architecture/system-architectures/amba/amba-specifications">AMBA</a>(<strong>A</strong>dvanced <strong>M</strong>icrocontroller <strong>B</strong>us <strong>A</strong>rchitecture, 先进微控制器总线架构)是arm公司提出的一种高性能片上总线架构，目前最新版本是AMBA 5。AMBA是由很多协议组成的协议簇，例如本文主要涉及的AMBA 4，主要由以下协议构成：</p>
-<ul>
-<li><strong>A</strong>dvanced e<strong>X</strong>tensible <strong>I</strong>nterface: 先进可扩展接口，即AXI，本文的侧重点</li>
-<li><strong>A</strong>dvanced <strong>P</strong>eriphreal <strong>B</strong>us: 先进外设总线，即APB，用于连接各个外设</li>
-<li><strong>A</strong>devaced <strong>T</strong>race <strong>B</strong>us: 先进追踪总线，即ATB，主要用于总线的调试</li>
-<li>ACE protocol: 系统一致性扩展协议，是AXI的增强</li>
-<li>ARM Low-Power Interface: ARM低功耗接口</li>
-</ul>
-<p>Xilinx 7-series FPGA提供了完整的AXI-4的支持，广泛使用于Xilinx第一方IP core之中，例如</p>
-<h3 id=""></h3>
-<h3 id="Reference">Reference</h3>
-<ol>
-<li><a href="https://developer.arm.com/documentation/ihi0022/e">AMBA AXI and ACE Protocol Specification - IHI0022E</a></li>
-<li><a href="https://docs.xilinx.com/v/u/en-US/ug1037-vivado-axi-reference-guide">Xilinx AXI Reference Guide</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>technical</category>
-      </categories>
-      <tags>
-        <tag>HDL</tag>
-        <tag>FPGA</tag>
       </tags>
   </entry>
   <entry>
