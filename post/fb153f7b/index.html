@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>在树莓派4B上搭建透明代理服务器 | Stephen Zhang's Blog</title><meta name="author" content="stephen zhang"><meta name="copyright" content="stephen zhang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="如题，使用Meta Kernal作为代理服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在树莓派4B上搭建透明代理服务器">
+<meta property="og:url" content="https://blogs.stephen-zhang.cn/post/fb153f7b/">
+<meta property="og:site_name" content="Stephen Zhang&#39;s Blog">
+<meta property="og:description" content="如题，使用Meta Kernal作为代理服务器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/12/09/HRj9cWfVBTOtpSq.png">
+<meta property="article:published_time" content="2023-12-09T12:57:30.000Z">
+<meta property="article:modified_time" content="2023-12-10T06:41:38.824Z">
+<meta property="article:author" content="stephen zhang">
+<meta property="article:tag" content="network">
+<meta property="article:tag" content="geek">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="rpi4b">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/09/HRj9cWfVBTOtpSq.png"><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://blogs.stephen-zhang.cn/post/fb153f7b/"><link rel="preconnect" href="//cdnjs.cloudflare.com"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="baidu-site-verification" content="code-rzFVk1pD5y"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.28/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?7690d855badf77d19385d41b87879ca0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdnjs.cloudflare.com/ajax/libs/egjs-infinitegrid/4.11.0/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '在树莓派4B上搭建透明代理服务器',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-10 14:41:38'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.0.0"><link rel="alternate" href="/atom.xml" title="Stephen Zhang's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/avatar.jpeg" onerror="onerror=null;src='/images/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">43</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-bookmark"></i><span> 合辑</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/commMobile"><i class="fa-fw fas fa-signal"></i><span> 移动通信</span></a></li><li><a class="site-page child" href="/commBasic"><i class="fa-fw fas fa-wave-square"></i><span> 通信基础</span></a></li><li><a class="site-page child" href="/reading"><i class="fa-fw fas fa-book-open-reader"></i><span> 读书笔记</span></a></li><li><a class="site-page child" href="/notes"><i class="fa-fw fas fa-note-sticky"></i><span> 杂谈</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://travellings.link"><i class="fa-fw fas fa-subway"></i><span> 开往</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Stephen Zhang's Blog"><span class="site-name">Stephen Zhang's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-bookmark"></i><span> 合辑</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/commMobile"><i class="fa-fw fas fa-signal"></i><span> 移动通信</span></a></li><li><a class="site-page child" href="/commBasic"><i class="fa-fw fas fa-wave-square"></i><span> 通信基础</span></a></li><li><a class="site-page child" href="/reading"><i class="fa-fw fas fa-book-open-reader"></i><span> 读书笔记</span></a></li><li><a class="site-page child" href="/notes"><i class="fa-fw fas fa-note-sticky"></i><span> 杂谈</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/friends/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener external nofollow noreferrer" href="https://travellings.link"><i class="fa-fw fas fa-subway"></i><span> 开往</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-user"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">在树莓派4B上搭建透明代理服务器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-09T12:57:30.000Z" title="发表于 2023-12-09 20:57:30">2023-12-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-10T06:41:38.824Z" title="更新于 2023-12-10 14:41:38">2023-12-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technical/">technical</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/technical/network/">network</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="在树莓派4B上搭建透明代理服务器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h3 id="Preface">Preface</h3>
+<h3 id="树莓派的初始化">树莓派的初始化</h3>
+<p>树莓派的系统直接使用官方提供的Raspberry Pi OS(powered by Debian 12)。</p>
+<p>此处遇到一个小问题，即使用Raspberry Pi Imager对系统进行定制时，写入的Wi-Fi配置无效。暂时不清楚这是笔者的配置问题还是Raspberry Pi Imager的bug。解决方案也很简单，树莓派开机后使用有线网络登录并激活Wi-Fi即可。</p>
+<p>由于Raspberry Pi OS使用NetworkManager作为默认的网络管理工具，因此完全不需要使用<code>iw</code>、<code>iwlist</code>以及<code>wpa_cli</code>等命令，也不需要手工编写<code>wpa_supplicant.conf</code>以激活Wi-Fi连接。直接使用NetworkManager提供的命令行工具<code>nmtui</code>即可方便的添加Wi-Fi配置。</p>
+<p>激活Wi-Fi后，在自己的路由器中为树莓派设置静态IP绑定。鉴于IPv6的兼容性，这里依然选择使用IPv4。笔者使用小米的家用路由器，因此局域网段为<code>192.168.31.0/24</code>。树莓派分配的IP地址为<code>192.168.31.23</code>。在路由器中配置静态IP绑定的方式，相比在Raspberry Pi OS配置IP地址更为方便灵活。</p>
+<p>激活网络后，可以更换系统的软件源，以期取得更快的软件下载安装速度。对应Raspberry Pi OS而言，因为它是Debian的衍生版本，因此可以直接使用Debian的软件源；同时，对于树莓派特有的软件，需要单独替换<code>/etc/apt/sources.list.d/raspi.list</code>。这里使用清华大学Tuna协会提供的软件镜像，具体参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://mirrors.tuna.tsinghua.edu.cn/help/debian/">Debian软件源使用帮助</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://mirrors.tuna.tsinghua.edu.cn/help/raspberrypi/">Raspberry Pi软件仓库</a></li>
+</ul>
+<h3 id="安装docker">安装docker</h3>
+<p>Docker CE的安装也参考了<a target="_blank" rel="noopener external nofollow noreferrer" href="https://mirrors.tuna.tsinghua.edu.cn/help/docker-ce/">清华大学Tuna协会的帮助</a>。</p>
+<p><em>以下操作均需使用特权（普通用户配合<code>sudo</code>命令）。</em></p>
+<p>笔者采用自动方式安装，执行以下命令即可将Docker CE的下载地址以及软件源地址修改为清华大学开源软件镜像站，并进行无人值守自动安装：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">DOWNLOAD_URL=<span class="string">&quot;https://mirrors.tuna.tsinghua.edu.cn/docker-ce&quot;</span> curl -fsSL https://get.docker.com/ | sudo -Esh</span><br></pre></td></tr></table></figure>
+<p>等待安装完成后，编辑<code>/etc/docker/daemon.json</code>，将如下内容写入。该部分是限制docker生成的日志文件的大小。笔者使用SD卡作为树莓派的硬盘，因此希望尽量减少写入以延长SD卡的寿命。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;log-driver&quot;</span><span class="punctuation">:</span> <span class="string">&quot;json-file&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;log-opts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;max-size&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20m&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;max-file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>此外，默认情况下，普通用户无法执行docker的相关命令，如有需要可以按以下步骤，授权普通用户执行docker命令。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo gpasswd -a <span class="variable">$USER</span> docker         <span class="comment"># 1. 将用户添加到`docker`用户组</span></span><br><span class="line">sudo <span class="built_in">chmod</span> a+rw /var/run/docker.sock <span class="comment"># 2. 使docker.sock可以被用户组成员读写</span></span><br><span class="line"><span class="comment"># sudo systemctl restart docker      # 3. 重启docker服务使改动生效</span></span><br></pre></td></tr></table></figure>
+<p>完成以上操作后，重启docker服务使改动生效：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h3 id="配置Meta-Kernel（代理核心）">配置Meta Kernel（代理核心）</h3>
+<p>主要参考<a target="_blank" rel="noopener external nofollow noreferrer" href="https://wiki.metacubex.one/example/#_2">示例配置</a>。</p>
+<p>在家目录下创建文件<code>~/mihomo/data/config.yaml</code>，注意文件的后缀必须是<code>yaml</code>而非<code>yml</code>。将示例配置拷贝到该文件中，并进行以下定制。</p>
+<p>对<code>proxy-providers</code>字段进行如下的改动，以<code>&lt;&gt;</code>包裹的字段要根据实际情况替换：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">proxy-providers:</span></span><br><span class="line">  <span class="string">&lt;name&gt;:</span></span><br><span class="line">    <span class="string">&lt;&lt;:</span> <span class="meta">*p</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">&quot;&lt;url&gt;&quot;</span>            <span class="comment"># proxy订阅链接</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./profiles/&lt;name&gt;</span> <span class="comment"># 下载的配置文件的路径，~/mihomo/data/profiles/&lt;name&gt;</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="number">86400</span>         <span class="comment"># 每天自动更新</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">health-check:</span></span><br><span class="line">      <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">https://www.gstatic.com/generate_204</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="number">300</span></span><br></pre></td></tr></table></figure>
+<p>使用<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/metacubex/metacubexd">MetaCubeXD</a>作为Meta Kernel的外部控制器（图形前端）。添加或者修改以下字段以启用外部控制器：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">external-controller:</span> <span class="number">192.168</span><span class="number">.31</span><span class="number">.0</span><span class="string">:9090</span> <span class="comment"># 允许局域网内的设备访问</span></span><br><span class="line"><span class="attr">external-ui:</span> <span class="string">ui</span>                        <span class="comment"># ui资源文件的路径，~/mihomo/data/ui</span></span><br><span class="line"><span class="attr">secret:</span> <span class="string">&quot;&quot;</span>                             <span class="comment"># optional，访问metacubexd时提供的“密码”</span></span><br></pre></td></tr></table></figure>
+<p><code>secret</code>字段相当于访问密码，如不需要可以置空或者删除该字段。</p>
+<h3 id="Meta-Kernel-in-docker">Meta Kernel in docker</h3>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/metacubex/metacubexd">MetaCubeXD</a>提供了一种在docker内运行Meta Kernal和MetaCubeXD的方法。</p>
+<p>创建<code>~/mihomo/docker-compose.yml</code>，写入以下配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">metacubexd:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">metacubexd</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">ghcr.io/metacubex/metacubexd</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span>  <span class="comment"># 随系统启动</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&#x27;80:80&#x27;</span>      <span class="comment"># 将docker内的80端口映射到host的80端口</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">meta:</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">meta</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">docker.io/metacubex/mihomo:Alpha</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">network_mode:</span> <span class="string">host</span></span><br><span class="line">    <span class="attr">cap_add:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">NET_ADMIN</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./data:/root/.config/mihomo</span></span><br></pre></td></tr></table></figure>
+<p>Meta Kernel的默认配置目录是<code>/root/.config/mihomo/</code>，因此笔者将主机下的<code>~/mihomo/data/</code>目录整体挂载过去，即可使上一步编写的<code>config.yaml</code>生效。</p>
+<p>切换到<code>~/mihomo/</code>目录，使用以下命令即可启动docker：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker compose up -d</span><br></pre></td></tr></table></figure>
+<p>此时即可在浏览器中访问树莓派的IP地址<code>192.168.31.23</code>，访问MetaCubeXD了。在MetaCubeXD中选择自己订阅的代理即可。</p>
+<p>可以使用以下命令更新、重启这两个docker服务（需要进入<code>~/mihomo</code>目录）：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker compose <span class="built_in">kill</span>    <span class="comment"># 停止meta dockers服务</span></span><br><span class="line">docker compose <span class="built_in">rm</span>      <span class="comment"># 删除meta dockers服务</span></span><br><span class="line">docker compose restart <span class="comment"># 重启meta dockers服务</span></span><br><span class="line">docker compose pull &amp;&amp; docker compose up -d <span class="comment"># 更新并重启</span></span><br></pre></td></tr></table></figure>
+<p>如需排查问题，可以使用以下命令进入meta docker：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it meta sh <span class="comment"># meta docker仅提供sh终端</span></span><br></pre></td></tr></table></figure>
+<h3 id="Meta-Kernel-on-Windows">Meta Kernel on Windows</h3>
+<p><em>TO BE FINISHED…</em></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blogs.stephen-zhang.cn">stephen zhang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blogs.stephen-zhang.cn/post/fb153f7b/">https://blogs.stephen-zhang.cn/post/fb153f7b/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blogs.stephen-zhang.cn" target="_blank">Stephen Zhang's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/network/">network</a><a class="post-meta__tags" href="/tags/geek/">geek</a><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/rpi4b/">rpi4b</a><a class="post-meta__tags" href="/tags/docker/">docker</a></div><div class="post_share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_twitter"></a><a class="a2a_button_wechat"></a><a class="a2a_button_sina_weibo"></a><a class="a2a_button_email"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener external nofollow noreferrer" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://s2.loli.net/2022/04/17/dSevxc1pMP6CEnR.png" rel="external nofollow noreferrer" target="_blank"><img class="post-qr-code-img" src="https://s2.loli.net/2022/04/17/dSevxc1pMP6CEnR.png" alt="微信支付"/></a><div class="post-qr-code-desc">微信支付</div></li><li class="reward-item"><a href="https://s2.loli.net/2022/04/17/zilkjsBucpeWHZD.png" rel="external nofollow noreferrer" target="_blank"><img class="post-qr-code-img" src="https://s2.loli.net/2022/04/17/zilkjsBucpeWHZD.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/post/9daf23ac/" title="使用Meyers' Singleton的一些思考"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">使用Meyers' Singleton的一些思考</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/436f9e1d/" title="杂谈： 在Virtual Box中配置Linux网络"><img class="cover" src="https://s2.loli.net/2022/07/19/SeIpWg3utJYRiZD.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-17</div><div class="title">杂谈： 在Virtual Box中配置Linux网络</div></div></a></div><div><a href="/post/515df42a/" title="杂谈：我的现代化neovim配置"><img class="cover" src="https://s2.loli.net/2022/07/18/syjWe67oV1mBYDX.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-30</div><div class="title">杂谈：我的现代化neovim配置</div></div></a></div><div><a href="/post/9f47efb9/" title="为ZeroTier搭建私有Planet Server"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-03</div><div class="title">为ZeroTier搭建私有Planet Server</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Preface"><span class="toc-number">1.</span> <span class="toc-text">Preface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">树莓派的初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85docker"><span class="toc-number">3.</span> <span class="toc-text">安装docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEMeta-Kernel%EF%BC%88%E4%BB%A3%E7%90%86%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">配置Meta Kernel（代理核心）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Meta-Kernel-in-docker"><span class="toc-number">5.</span> <span class="toc-text">Meta Kernel in docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Meta-Kernel-on-Windows"><span class="toc-number">6.</span> <span class="toc-text">Meta Kernel on Windows</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/04/17/LXdE9NKDcUbeGO8.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By stephen zhang</div><div class="footer_custom_text"><a target="_blank" rel="noopener external nofollow noreferrer" href="https://beian.miit.gov.cn/"><img class="icp-icon" src="/images/beian.png"><span>浙ICP备2020030924号-1</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.11.0/js/utils.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.11.0/js/main.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.28/fancybox/fancybox.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.2.0/instantpage.min.js" type="module"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/17.8.5/lazyload.iife.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'zhang-stephen/blogs',
+      'data-repo-id': 'MDEwOlJlcG9zaXRvcnkzODg0NTQ5OTU=',
+      'data-category-id': 'DIC_kwDOFydaU84CPOs_',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-mapping":"title","data-input-position":"top","data-loading":"lazy","data-emit-metadata":0})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-theme-butterfly/4.11.0/js/search/local-search.min.js"></script></div></div></body></html>
