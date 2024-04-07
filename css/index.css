@@ -1126,7 +1126,7 @@ figure.highlight pre .javascript .function {
 #article-container pre,
 #article-container code {
   font-size: var(--global-font-size);
-  font-family: consolas !important;
+  font-family: consolas, Menlo, 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
 }
 #article-container code {
   padding: 2px 4px;
@@ -2439,16 +2439,9 @@ h1.page-title + .tag-cloud-list {
 }
 #page-header #post-info {
   position: absolute;
-  bottom: 100px;
+  bottom: 30px;
   padding: 0 8%;
   width: 100%;
-  text-align: center;
-}
-@media screen and (max-width: 900px) {
-  #page-header #post-info {
-    bottom: 30px;
-    text-align: left;
-  }
 }
 @media screen and (max-width: 768px) {
   #page-header #post-info {
